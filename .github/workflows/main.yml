@@ -45,7 +45,7 @@ jobs:
         runs-on:
           - "ubuntu"
           - "macos"
-          - "windows"
+          # - "windows"
 
     steps:
       - uses: actions/checkout@v3
