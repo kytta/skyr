@@ -80,7 +80,7 @@ jobs:
           files: ./coverage.xml
           flags: >-
             OS-${{ matrix.runs-on }},
-            Py-${{ steps.python-install.outputs.python-version }}
+            Py-${{ matrix.python-version }}
           name: >-
-            OS-${{ matrix.os }},
-            Py-${{ steps.python-install.outputs.python-version }}
+            OS-${{ matrix.runs-on }},
+            Py-${{ matrix.python-version }}
