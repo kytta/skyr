@@ -7,6 +7,8 @@ from typing import Sequence
 
 __version__ = metadata.version("skyr")
 
+DEFAULT_DIR = Path("./scripts/")
+
 
 def _get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -31,8 +33,8 @@ def _get_parser() -> argparse.ArgumentParser:
         metavar="SCRIPT",
     )
     parser.add_argument(
-        "--config-dir",
-        default="./scripts/",
+        "--script-dir",
+        default=DEFAULT_DIR,
         type=Path,
         help="Location of the script files.",
         metavar="DIR",
