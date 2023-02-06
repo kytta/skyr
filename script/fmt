@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eux
+
+pre-commit run --all-files autoflake
+pre-commit run --all-files autopep8
+pre-commit run --all-files reorder-python-imports
+pre-commit run --all-files add-trailing-comma
+pre-commit run --all-files pyupgrade
+pre-commit run --all-files docformatter
