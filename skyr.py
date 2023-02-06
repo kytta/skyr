@@ -25,21 +25,21 @@ def find_script(name: str, script_dir: Path = DEFAULT_DIR) -> Optional[Path]:
     resolved_script_dir = script_dir.resolve()
 
     if not resolved_script_dir.exists():
-        _err(f"Directory {script_dir!r} doesn't exist.")
+        _err(f"Script directory doesn't exist: {str(resolved_script_dir)}")
         return None
 
     if not resolved_script_dir.is_dir():
-        _err(f"{script_dir!r} is not a directory.")
+        _err(f"Script directory is not a directory: {str(script_dir)}")
         return None
 
     script_file = resolved_script_dir / name
 
     if not script_file.exists():
-        _err(f"Script {name!r} doesn't exist in {script_dir}.")
+        _err(f"Script doesn't exist: {str(script_file)}")
         return None
 
     if not script_file.is_file():
-        _err(f"{script_file!r} is not a file.")
+        _err(f"Script is not a file: {str(script_file)}")
         return None
 
     return script_file
@@ -58,16 +58,15 @@ def try_execute(
     except OSError as exc:
         if exc.errno is errno.EACCES:
             _err(
-                f"You are not allowed to execute {script_file!r}. Please make "
-                "sure that you've set the correct rights via chmod.",
-            )
+                f"You are not allowed to execute {str(script_file)}. Please "
+                "make sure that you've set the correct rights via chmod.", )
         elif exc.errno is errno.ENOEXEC:
             _err(
-                f"{script_file!r} has a wrong executable format. Did you "
+                f"{str(script_file)} has a wrong executable format. Did you "
                 "forget to add a shebang?",
             )
         else:
-            _err(f"Could not execute {script_file!r}: {exc.strerror}")
+            _err(f"Could not execute {str(script_file)}: {exc.strerror}")
         raise SystemExit(1) from exc
 
 
