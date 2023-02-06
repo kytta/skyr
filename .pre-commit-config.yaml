@@ -11,9 +11,9 @@ repos:
       - id: check-toml
       - id: check-yaml
       - id: check-executables-have-shebangs
-        exclude: "tests/assets/scripts/no-shebang"
+        exclude: "tests/assets/script/no-shebang"
       - id: check-shebang-scripts-are-executable
-        exclude: "tests/assets/scripts/not-executable"
+        exclude: "tests/assets/script/not-executable"
       - id: check-ast
       - id: check-builtin-literals
       - id: check-docstring-first
