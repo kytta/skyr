@@ -16,6 +16,31 @@ def _err(msg: str) -> None:
     sys.stderr.flush()
 
 
+def find_script(name: str, script_dir: Path = DEFAULT_DIR) -> Optional[Path]:
+    """Tries to find a script to run."""
+    resolved_script_dir = script_dir.resolve()
+
+    if not resolved_script_dir.exists():
+        _err(f"Directory {script_dir!r} doesn't exist.")
+        return None
+
+    if not resolved_script_dir.is_dir():
+        _err(f"{script_dir!r} is not a directory.")
+        return None
+
+    script_file = resolved_script_dir / name
+
+    if not script_file.exists():
+        _err(f"Script {name!r} doesn't exist in {script_dir}.")
+        return None
+
+    if not script_file.is_file():
+        _err(f"{script_file!r} is not a file.")
+        return None
+
+    return script_file
+
+
 def _get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="A low-fat task runner, Skyr runs scripts from the "
@@ -49,8 +74,14 @@ def _get_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
-    parser = _get_parser()
-    args, rest = parser.parse_known_args(argv)
+    args, rest = _get_parser().parse_known_args(argv)
+
+    script_file = find_script(args.script, script_dir=args.script_dir)
+
+    if script_file is None:
+        _err(f"Couldn't find script {args.script!r}")
+        return 1
+
     return 0
 
 
