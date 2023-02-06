@@ -1,0 +1,86 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+  pull_request:
+    branches:
+      - main
+
+# Run only one workflow per commit / pull-request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+# Enable colour output
+env:
+  FORCE_COLOR: 1 # Request colored output from CLI tools supporting it
+  MYPY_FORCE_COLOR: 1 # MyPy's color enforcement
+  PRE_COMMIT_COLOR: 1
+  PY_COLORS: 1 # Recognized by the `py` package, dependency of `pytest`
+  TOX_PARALLEL_NO_SPINNER: 1
+  TOX_TESTENV_PASSENV: >-
+    FORCE_COLOR
+    MYPY_FORCE_COLOR
+    NO_COLOR
+    PY_COLORS
+    PYTEST_THEME
+    PYTEST_THEME_MODE
+    PRE_COMMIT_COLOR
+
+jobs:
+  test:
+    name: ${{ matrix.python-version }} on ${{ matrix.runs-on }}
+    runs-on: ${{ matrix.runs-on }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        runs-on:
+          - "ubuntu"
+          - "macos"
+          - "windows"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        id: python-install
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Get pip cache dir
+        id: pip-cache
+        shell: bash
+        run: |
+          echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: >-
+            ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('tox.ini') }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+      - name: Install test dependencies
+        run: python -m pip install -U pip tox tox-gh-actions virtualenv
+      - name: Prepare test environment
+        run: tox --notest -p auto --parallel-live
+      - name: Test
+        run: tox
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: >-
+            OS-${{ matrix.runs-on }},
+            Py-${{ matrix.python-version }}
+          name: >-
+            OS-${{ matrix.runs-on }},
+            Py-${{ matrix.python-version }}

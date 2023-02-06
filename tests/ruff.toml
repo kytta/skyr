@@ -1,0 +1,8 @@
+extend ="../pyproject.toml"
+
+extend-select = [
+    "PT",  # flake8-pytest-style
+]
+extend-ignore = [
+    "S101",  # use of assert detected
+]
