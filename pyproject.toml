@@ -7,7 +7,7 @@ name = "skyr"
 description = "A low-fat task runner."
 readme = "README.md"
 requires-python = ">=3.8"
-license.file = "LICENSE"
+license = {text = "ISC License"}
 authors = [
     { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
