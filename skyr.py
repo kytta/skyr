@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import sys
 from importlib import metadata
 from pathlib import Path
 from typing import Optional
@@ -8,6 +9,11 @@ from typing import Sequence
 __version__ = metadata.version("skyr")
 
 DEFAULT_DIR = Path("./scripts/")
+
+
+def _err(msg: str) -> None:
+    sys.stderr.write(f"[ERROR] {msg}\n")
+    sys.stderr.flush()
 
 
 def _get_parser() -> argparse.ArgumentParser:
