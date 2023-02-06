@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=61", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skyr"
+description = "A low-fat task runner."
+readme = "README.md"
+requires-python = ">=3.8"
+license.file = "LICENSE"
+authors = [
+    { name = "Nikita Karamov", email = "me@kytta.dev" },
+]
+maintainers = [
+    { name = "Nikita Karamov", email = "me@kytta.dev" },
+]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: ISC License (ISCL)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dependencies = []
+dynamic = ["version"]
+
+[project.urls]
+Source = "https://github.com/kytta/skyr"
+Issues = "https://github.com/kytta/skyr/issues"
+
+[project.scripts]
+skyr = "skyr:main"
+
+[tool.autopep8]
+ignore = ["W503"]
+
+[tool.coverage.run]
+plugins = ["covdefaults"]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+addopts = "--tb=short --showlocals"
+
+[tool.ruff]
+line-length = 79
+target-version = "py38"
+
+select = [
+    "F",       # pyflakes
+    "E", "W",  # pycodestyle
+    "C90",     # mccabe
+    "N",       # pep8-naming
+    "S",       # bandit
+    "BLE",     # flake8-blind-except
+    "FBT",     # flake8-boolean-trap
+    "B",       # flake8-bugbear
+    "A",       # flake8-builtins
+    "C4",      # flake8-comprehensions
+    "DTZ",     # flake8-datetimez
+    "EM",      # flake8-errmsg
+    "ISC",     # flake8-implicit-str-concat
+    "ICN",     # flake8-import-conventions
+    "PIE",     # flake8-pie
+    "T20",     # flake8-print
+    "Q",       # flake8-quotes
+    "RET",     # flake8-return
+    "SIM",     # flake8-simplify
+    "PTH",     # flake8-use-pathlib
+    "ERA",     # eradicate
+    "PL",      # pylint
+    "TRY",     # tryceratops
+    "RUF",     # ruff
+]
+
+
+[tool.ruff.mccabe]
+max-complexity = 10
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "double"
+
+[tool.setuptools_scm]
