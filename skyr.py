@@ -2,6 +2,7 @@
 import argparse
 from importlib import metadata
 from pathlib import Path
+from typing import Optional
 from typing import Sequence
 
 __version__ = metadata.version("skyr")
@@ -39,7 +40,7 @@ def _get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Sequence[str] | None = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = _get_parser()
     args, rest = parser.parse_known_args(argv)
     return 0
