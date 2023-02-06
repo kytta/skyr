@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 import argparse
+import errno
+import os
 import sys
 from importlib import metadata
 from pathlib import Path
+from typing import List
+from typing import NoReturn
 from typing import Optional
 from typing import Sequence
 
@@ -39,6 +43,32 @@ def find_script(name: str, script_dir: Path = DEFAULT_DIR) -> Optional[Path]:
         return None
 
     return script_file
+
+
+def try_execute(
+    name: str,
+    script_file: Path,
+    argv: Optional[List[str]] = None,
+) -> NoReturn:
+    if argv is None:
+        argv = []
+
+    try:
+        os.execl(script_file, name, *argv)
+    except OSError as exc:
+        if exc.errno is errno.EACCES:
+            _err(
+                f"You are not allowed to execute {script_file!r}. Please make "
+                "sure that you've set the correct rights via chmod.",
+            )
+        elif exc.errno is errno.ENOEXEC:
+            _err(
+                f"{script_file!r} has a wrong executable format. Did you "
+                "forget to add a shebang?",
+            )
+        else:
+            _err(f"Could not execute {script_file!r}: {exc.strerror}")
+        raise SystemExit(1) from exc
 
 
 def _get_parser() -> argparse.ArgumentParser:
@@ -81,6 +111,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if script_file is None:
         _err(f"Couldn't find script {args.script!r}")
         return 1
+
+    try_execute(f"{args.script_dir / args.script}", script_file, rest)
 
     return 0
 
