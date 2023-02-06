@@ -55,31 +55,6 @@ def test_find_script(
 
 
 @pytest.mark.parametrize(
-    ("argv", "expected_out"), [
-        ([], b"I'm a build script"),
-        (["hello"], b"Hello World!"),
-        (
-            ["--script-dir", "other_dir"],
-            b"I'm a build script in a different directory",
-        ),
-    ],
-)
-def test_successful_execution(
-    argv: List[str],
-    expected_out: bytes,
-    monkeypatch,
-):
-    with monkeypatch.context() as m:
-        m.chdir(Path(__file__).parent / "assets")
-
-        cmd = ["python3", "-m", "skyr", *argv]
-        result = subprocess.run(cmd, capture_output=True)
-
-        assert result.returncode == 0
-        assert expected_out in result.stdout
-
-
-@pytest.mark.parametrize(
     ("name", "script_file", "expected_err"), [
         (
             "scripts/no-shebang",
@@ -110,3 +85,28 @@ def test_try_execute(
 
         _, err = capsys.readouterr()
         assert expected_err in err
+
+
+@pytest.mark.parametrize(
+    ("argv", "expected_out"), [
+        ([], b"I'm a build script"),
+        (["hello"], b"Hello World!"),
+        (
+            ["--script-dir", "other_dir"],
+            b"I'm a build script in a different directory",
+        ),
+    ],
+)
+def test_successful_execution(
+    argv: List[str],
+    expected_out: bytes,
+    monkeypatch,
+):
+    with monkeypatch.context() as m:
+        m.chdir(Path(__file__).parent / "assets")
+
+        cmd = ["python3", "-m", "skyr", *argv]
+        result = subprocess.run(cmd, capture_output=True)
+
+        assert result.returncode == 0
+        assert expected_out in result.stdout
