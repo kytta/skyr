@@ -9,10 +9,51 @@ because Skyr uses Shell scripts to define build commands and looks for special
 comments for special features. This means you can very easily integrate Skyr
 into your existing project.
 
+## Install
+
+### Using `pipx` (recommended)
+
+```sh
+pipx install skyr
+```
+
+### Using plain `pip`
+
+```sh
+pip install --user skyr
+```
+
+## Drop-in executable
+
+```sh
+wget "https://raw.githubusercontent.com/kytta/skyr/main/skyr.py"
+```
+
+## Usage
+
+For example, to execute `script/test`:
+
+```sh
+skyr test
+```
+
+If you don't provide the script name, it will default to `build`:
+
+```sh
+skyr  # same as 'skyr build'
+```
+
+By default, Skyr searches for your scripts inside `./script`. To change that,
+use `--script-dir`:
+
+```sh
+skyr --script-dir ./dev/ test
+```
+
 ## Roadmap
 
-- [ ] Basic script running: Run .sh, .bash, .zsh, and other files from the
-      `scripts/` directory.
+- [x] Basic script running: Run .sh, .bash, .zsh, and other files from the
+      `script/` directory.
 - [ ] Target dependencies: Run scripts if other depend on them.
 - [ ] Dependency age: Run scripts only if the files it depends on changed.
 - [ ] Script validation: Check that Skyr understands the scripts it was given.
