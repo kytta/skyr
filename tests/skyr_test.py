@@ -23,7 +23,7 @@ def test_argpase_exits_zero(argv: List[str], return_code: int):
 
 @pytest.mark.parametrize(
     ("name", "script_dir", "return_value", "expected_err"), [
-        ("build", None, ASSETS_DIR / "scripts/build", None),
+        ("build", None, ASSETS_DIR / "script/build", None),
         ("build", "./other_dir", ASSETS_DIR / "other_dir/build", None),
         ("build", "./doesnt-exist", None, "Script directory doesn't exist"),
         ("build", "./a_file", None, "Script directory is not a directory"),
@@ -57,13 +57,13 @@ def test_find_script(
 @pytest.mark.parametrize(
     ("name", "script_file", "expected_err"), [
         (
-            "scripts/no-shebang",
-            (ASSETS_DIR / "scripts/no-shebang").resolve(),
+            "script/no-shebang",
+            (ASSETS_DIR / "script/no-shebang").resolve(),
             "has a wrong executable format",
         ),
         (
-            "scripts/not-executable",
-            (ASSETS_DIR / "scripts/not-executable").resolve(),
+            "script/not-executable",
+            (ASSETS_DIR / "script/not-executable").resolve(),
             "You are not allowed to execute",
         ),
     ],

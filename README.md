@@ -17,10 +17,10 @@ into your existing project.
 - [ ] Dependency age: Run scripts only if the files it depends on changed.
 - [ ] Script validation: Check that Skyr understands the scripts it was given.
 - [ ] Make mode: Support running very basic Makefiles.
-- [ ] Make migration mode: Support migrating from a Makefile to a `scripts/`
+- [ ] Make migration mode: Support migrating from a Makefile to a `script/`
       directory.
 - [ ] Just mode: Support running very basic Justfiles.
-- [ ] Just migration mode: Support migrating from `just` to a `scripts/`
+- [ ] Just migration mode: Support migrating from `just` to a `script/`
       directory.
 
 ## Licence

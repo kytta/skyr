@@ -12,7 +12,7 @@ from typing import Sequence
 
 __version__ = metadata.version("skyr")
 
-DEFAULT_DIR = Path("./scripts/")
+DEFAULT_DIR = Path("./script/")
 
 
 def _err(msg: str) -> None:
@@ -73,7 +73,7 @@ def try_execute(
 def _get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="A low-fat task runner, Skyr runs scripts from the "
-                    "'./scripts/' directory in a make(1) fashion.",
+                    "'./script/' directory in a make(1) fashion.",
         epilog="Source code: <https://github.com/kytta/skyr>",
         allow_abbrev=False,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
