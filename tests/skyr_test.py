@@ -22,7 +22,7 @@ def test_argpase_exits_zero(argv: List[str], return_code: int):
 
 
 @pytest.mark.parametrize(
-    ("name", "script_dir", "return_value", "expected_output"), [
+    ("name", "script_dir", "return_value", "expected_err"), [
         ("build", None, ASSETS_DIR / "scripts/build", None),
         ("build", "./other_dir", ASSETS_DIR / "other_dir/build", None),
         ("build", "./doesnt-exist", None, "Script directory doesn't exist"),
@@ -35,7 +35,7 @@ def test_find_script(
     name: str,
     script_dir: Optional[str],
     return_value: Optional[Path],
-    expected_output: Optional[str],
+    expected_err: Optional[str],
     capsys,
     monkeypatch,
 ):
@@ -50,27 +50,23 @@ def test_find_script(
 
         assert actual == return_value
 
-        if expected_output is not None:
-            assert expected_output in captured.err
+        if expected_err is not None:
+            assert expected_err in captured.err
 
 
 @pytest.mark.parametrize(
-    ("argv", "return_code", "expected_out", "expected_err"), [
-        ([], 0, b"I'm a build script", None),
-        (["hello"], 0, b"Hello World!", None),
+    ("argv", "expected_out"), [
+        ([], b"I'm a build script"),
+        (["hello"], b"Hello World!"),
         (
-            ["--script-dir", "other_dir"], 0,
-            b"I'm a build script in a different directory", None,
+            ["--script-dir", "other_dir"],
+            b"I'm a build script in a different directory",
         ),
-        (["no-shebang"], 1, None, b"has a wrong executable format"),
-        (["not-executable"], 1, None, b"You are not allowed to execute"),
     ],
 )
-def test_execution(
+def test_successful_execution(
     argv: List[str],
-    return_code: int,
-    expected_out: Optional[bytes],
-    expected_err: Optional[bytes],
+    expected_out: bytes,
     monkeypatch,
 ):
     with monkeypatch.context() as m:
@@ -79,10 +75,38 @@ def test_execution(
         cmd = ["python3", "-m", "skyr", *argv]
         result = subprocess.run(cmd, capture_output=True)
 
-        assert result.returncode == return_code
+        assert result.returncode == 0
+        assert expected_out in result.stdout
 
-        if expected_out is not None:
-            assert expected_out in result.stdout
 
-        if expected_err is not None:
-            assert expected_err in result.stderr
+@pytest.mark.parametrize(
+    ("name", "script_file", "expected_err"), [
+        (
+            "scripts/no-shebang",
+            (ASSETS_DIR / "scripts/no-shebang").resolve(),
+            "has a wrong executable format",
+        ),
+        (
+            "scripts/not-executable",
+            (ASSETS_DIR / "scripts/not-executable").resolve(),
+            "You are not allowed to execute",
+        ),
+    ],
+)
+def test_try_execute(
+    name: str,
+    script_file: Path,
+    expected_err: str,
+    monkeypatch,
+    capsys,
+):
+    with monkeypatch.context() as m:
+        m.chdir(Path(__file__).parent / "assets")
+
+        with pytest.raises(SystemExit) as excinfo:
+            skyr.try_execute(name, script_file)
+
+        assert excinfo.value.code == 1
+
+        _, err = capsys.readouterr()
+        assert expected_err in err
