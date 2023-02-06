@@ -88,6 +88,22 @@ def test_try_execute(
 
 
 @pytest.mark.parametrize(
+    "script_name", [
+        "doesnt_exist",
+        "no-shebang",
+    ],
+)
+def test_main(script_name: str, monkeypatch):
+    with monkeypatch.context() as m:
+        m.chdir(Path(__file__).parent / "assets")
+
+        with pytest.raises(SystemExit) as excinfo:
+            skyr.main(script_name)
+
+        assert excinfo.value.code == 1
+
+
+@pytest.mark.parametrize(
     ("argv", "expected_out"), [
         ([], b"I'm a build script"),
         (["hello"], b"Hello World!"),

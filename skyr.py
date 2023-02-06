@@ -102,19 +102,17 @@ def _get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
     args, rest = _get_parser().parse_known_args(argv)
 
     script_file = find_script(args.script, script_dir=args.script_dir)
 
     if script_file is None:
         _err(f"Couldn't find script {args.script!r}")
-        return 1
+        raise SystemExit(1)
 
     try_execute(f"{args.script_dir / args.script}", script_file, rest)
 
-    return 0
-
 
 if __name__ == "__main__":
-    raise (SystemExit(main()))
+    main()
