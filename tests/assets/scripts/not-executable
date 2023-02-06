@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "I have a shebang, but you can't execute me!"
