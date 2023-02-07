@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -eux
+
+pre-commit run --all-files ruff
+pre-commit run --all-files mypy

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+echo "This will clean the build and test outputs only"
+echo "To clear other stuff, like caches, try 'git clean'"
+
+set -eux
+
+rm -rf \
+  .coverage \
+  build \
+  dist \
+  coverage.xml \
+  skyr.egg-info

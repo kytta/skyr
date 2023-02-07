@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -eux
+
+coverage erase
+coverage run -m pytest tests
+coverage report
