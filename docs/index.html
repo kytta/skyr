@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Skyr</title>
+		<link rel="icon" href="./logo.svg" />
+		<style>*{box-sizing:border-box;border:0;margin:0;padding:0}html{width:100%;height:100%}body,pre code{line-height:1.85625rem}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue""Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji";font-size:1.125rem;background:#fff;color:#1a1919;padding:36px;margin-left:auto;margin-right:auto;width:900px}code,pre{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:.9rem}pre{border-left:0 solid #59c072;line-height:1.575rem;overflow:auto;padding-left:18px}pre code{background:0 0;border:0;padding:0}code,nav ul li{display:inline-block}code{background:#daf1e0;border-radius:3.6px;color:#2a6f3b;line-height:1.125rem;padding:.225rem .39375rem .16875rem}aside code{background:initial;display:initial;padding:0}h1,h2,h3{color:#000;margin-bottom:1.125rem}h1{font-size:2.25rem;font-weight:500;line-height:2.7rem;margin-top:4.5rem}h2{font-size:1.575rem;font-weight:400;line-height:2.1375rem;margin-top:3.375rem}h3{font-size:1.35rem;line-height:1.6875rem;margin-top:2.25rem}a{color:#275a90;text-decoration:none}a:hover{text-decoration:underline}hr{border-bottom:1px solid #595959}figcaption,small{font-size:.95625rem}figcaption{color:#595959}em,i{font-style:italic}b,strong{font-weight:600}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}figure,hr,ol,p,pre,ul{margin-bottom:1.85625rem}aside{float:right;width:285px;font-size:smaller;color:gray;margin-left:1em;margin-bottom:1em}article,footer,header{padding:43.2px}article{background:#fff;border:1px solid #d9d9d9}nav,nav ul{text-align:center}nav ul{list-style:none;margin-left:0}nav ul li{margin-left:9px;margin-right:9px;vertical-align:middle}nav ul li:first-child{margin-left:0}nav ul li:last-child{margin-right:0}ol,ul{margin-left:31.5px}li ol,li ul{margin-bottom:0}img{height:auto;margin:0 auto}figure img{display:block}@media (max-width:767px){body{padding:18px 0}article{border:0}article,footer,header{padding:18px}}</style>
+	</head>
+	<body>
+		<article>
+			<figure>
+				<img src="./logo.svg" alt="Skyr" style="max-height: 100px" />
+			</figure>
+			<aside>
+				&dagger;&nbsp;This functionality is planned. Skyr is a very young
+				project, so be patient!
+			</aside>
+			<p>
+				<strong>Skyr</strong> is a task runner, similar to Make. Just like Make,
+				it can have tasks that depend on each other and are executed only if a
+				file changes.<sup>&dagger;</sup>
+			</p>
+			<p>
+				However, unlike Make, Skyr doesn't actually have to be installed on your
+				machine to run. That's because Skyr uses Shell scripts to define build
+				commands and looks for special comments for special features. This means
+				you can very easily integrate Skyr into your existing project.
+			</p>
+			<h2>Install</h2>
+			<p>
+				Skyr is on PyPI, so you can install it like any other Python package. We
+				prefer <code>pipx</code>:
+			</p>
+			<pre>
+$ pipx install --force skyr
+  installed package skyr 0.1.0, installed using Python 3.11.1
+  These apps are now globally available
+    - skyr
+done! ✨ 🌟 ✨</pre
+			>
+
+			<h2>Use</h2>
+			<p>Run any script under <code>./script/</code> by providing its name:</p>
+			<aside>this will run <code>script/test</code></aside>
+			<pre>$ skyr test</pre>
+			<p>By default, Skyr runs the <code>build</code> script:</p>
+			<aside>this will run <code>script/build</code></aside>
+			<pre>$ skyr</pre>
+			<p>You can pass arguments to your scripts:</p>
+			<aside>this will run <code>script/lint file.py</code></aside>
+			<pre>$ skyr lint file.py</pre>
+
+			<h2>Work in progress</h2>
+			<p>
+				Skyr is still in development. If you want to contribute, fork it and
+				submit a
+				<a href="https://github.com/kytta/skyr">pull request</a>. Your help is
+				always appreciated.
+			</p>
+		</article>
+		<footer>
+			<nav>
+				<ul>
+					<li><a href="https://github.com/kytta/skyr">Source code</a></li>
+					<li>
+						<a href="https://github.com/kytta/skyr/issues">Bug tracker</a>
+					</li>
+					<li><a href="https://pypi.org/project/skyr">PyPI</a></li>
+				</ul>
+			</nav>
+			<nav>
+				<ul>
+					<li>
+						<small>
+							&copy;&nbsp;2023
+							<a href="https://www.kytta.dev/">Nikita Karamov</a>
+						</small>
+					</li>
+					<li>
+						<small>
+							Licensed under the
+							<a href="https://spdx.org/licenses/ISC.html">ISC License</a>.
+						</small>
+					</li>
+				</ul>
+			</nav>
+		</footer>
+	</body>
+</html>
