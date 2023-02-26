@@ -37,7 +37,7 @@ body {
 	/* Styles moved from <section> */
 	margin-left: auto;
 	margin-right: auto;
-	width: 900px;
+	max-width: 900px;
 }
 pre,
 code {
