@@ -39,6 +39,9 @@ Issues = "https://github.com/kytta/skyr/issues"
 [project.scripts]
 skyr = "skyr:main"
 
+[tool.setuptools]
+py-modules = ["skyr"]
+
 [tool.autopep8]
 ignore = ["W503"]
 
