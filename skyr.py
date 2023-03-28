@@ -5,10 +5,12 @@ import os
 import sys
 from importlib import metadata
 from pathlib import Path
+from typing import Iterable
 from typing import List
 from typing import NoReturn
 from typing import Optional
 from typing import Sequence
+from typing import Union
 
 __version__ = metadata.version("skyr")
 
@@ -18,6 +20,25 @@ DEFAULT_DIR = Path("./script/")
 def _err(msg: str) -> None:
     sys.stderr.write(f"[ERROR] {msg}\n")
     sys.stderr.flush()
+
+
+def find_dir(
+    candidates: Iterable[Union[str, os.PathLike[str], Path]],
+) -> Optional[Path]:
+    """Searches an array for an existent directory.
+
+    :param candidates: Directories or names that will be searched
+    :return: First existent directory, or ``None`` if not found.
+    """
+    for candidate in candidates:
+        if candidate is None:
+            continue
+
+        candidate_path = Path(candidate)
+        if candidate_path.is_dir() and candidate_path.exists():
+            return candidate_path.resolve()
+
+    return None
 
 
 def find_script(name: str, script_dir: Path = DEFAULT_DIR) -> Optional[Path]:

@@ -1,5 +1,6 @@
 import subprocess
 from pathlib import Path
+from typing import Iterable
 from typing import List
 from typing import Optional
 
@@ -19,6 +20,25 @@ ASSETS_DIR = Path(__file__).parent / "assets"
 def test_argpase_exits_zero(argv: List[str], return_code: int):
     with pytest.raises(SystemExit):
         assert skyr.main(argv) == return_code
+
+
+@pytest.mark.parametrize(
+    ("candidates", "return_value"), [
+        ([], None),
+        (["nonexistentdir"], None),
+        (["script"], ASSETS_DIR / "script"),
+        (["nonexistentdir", "other_dir"], ASSETS_DIR / "other_dir"),
+        (["a_file"], None),
+    ],
+)
+def test_find_dir(
+    candidates: Iterable[str],
+    return_value: Optional[Path],
+    monkeypatch,
+):
+    with monkeypatch.context() as m:
+        m.chdir(Path(__file__).parent / "assets")
+        assert skyr.find_dir(candidates) == return_value
 
 
 @pytest.mark.parametrize(
