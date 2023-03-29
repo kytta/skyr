@@ -43,36 +43,23 @@ def test_find_dir(
 
 
 @pytest.mark.parametrize(
-    ("name", "script_dir", "return_value", "expected_err"), [
-        ("build", None, ASSETS_DIR / "script/build", None),
-        ("build", "./other_dir", ASSETS_DIR / "other_dir/build", None),
-        ("build", "./doesnt-exist", None, "Script directory doesn't exist"),
-        ("build", "./a_file", None, "Script directory is not a directory"),
-        ("doesnt-exist", None, None, "Script doesn't exist"),
-        ("a_dir", None, None, "Script is not a file"),
+    ("name", "return_value", "expected_err"), [
+        ("build", ASSETS_DIR / "script/build", None),
+        ("doesnt-exist", None, "Script doesn't exist"),
+        ("a_dir", None, "Script is not a file"),
     ],
 )
 def test_find_script(
     name: str,
-    script_dir: Optional[str],
     return_value: Optional[Path],
     expected_err: Optional[str],
     capsys,
-    monkeypatch,
 ):
-    with monkeypatch.context() as m:
-        m.chdir(Path(__file__).parent / "assets")
+    assert skyr.find_script(name, ASSETS_DIR / "script") == return_value
 
-        if script_dir is None:
-            actual = skyr.find_script(name)
-        else:
-            actual = skyr.find_script(name, Path(script_dir))
+    if expected_err is not None:
         captured = capsys.readouterr()
-
-        assert actual == return_value
-
-        if expected_err is not None:
-            assert expected_err in captured.err
+        assert expected_err in captured.err
 
 
 @pytest.mark.parametrize(

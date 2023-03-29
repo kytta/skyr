@@ -41,19 +41,13 @@ def find_dir(
     return None
 
 
-def find_script(name: str, script_dir: Path = DEFAULT_DIR) -> Optional[Path]:
-    """Tries to find a script to run."""
-    resolved_script_dir = script_dir.resolve()
+def find_script(name: str, script_dir: Path) -> Optional[Path]:
+    """Tries to find a script to run.
 
-    if not resolved_script_dir.exists():
-        _err(f"Script directory doesn't exist: {str(resolved_script_dir)}")
-        return None
-
-    if not resolved_script_dir.is_dir():
-        _err(f"Script directory is not a directory: {str(script_dir)}")
-        return None
-
-    script_file = resolved_script_dir / name
+    :param name: Name of the script
+    :param script_dir: Directory to search for the scripts
+    """
+    script_file = (script_dir / name).resolve()
 
     if not script_file.exists():
         _err(f"Script doesn't exist: {str(script_file)}")
