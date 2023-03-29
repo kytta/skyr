@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Iterable
 from typing import List
 from typing import Optional
+from typing import Sequence
 
 import pytest
 
@@ -108,17 +109,17 @@ def test_try_execute(
 
 
 @pytest.mark.parametrize(
-    "script_name", [
-        "doesnt_exist",
-        "no-shebang",
+    "argv", [
+        ["doesnt_exist"],
+        ["no-shebang"],
     ],
 )
-def test_main(script_name: str, monkeypatch):
+def test_main_fails(argv: Sequence[str], monkeypatch):
     with monkeypatch.context() as m:
         m.chdir(Path(__file__).parent / "assets")
 
         with pytest.raises(SystemExit) as excinfo:
-            skyr.main(script_name)
+            skyr.main(argv)
 
         assert excinfo.value.code == 1
 
