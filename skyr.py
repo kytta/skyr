@@ -34,9 +34,6 @@ def find_dir(
     :return: First existent directory, or ``None`` if not found.
     """
     for candidate in candidates:
-        if candidate is None:
-            continue
-
         candidate_path = Path(candidate)
         if candidate_path.is_dir() and candidate_path.exists():
             return candidate_path.resolve()
