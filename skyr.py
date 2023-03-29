@@ -111,7 +111,8 @@ def _get_parser() -> argparse.ArgumentParser:
         "--script-dir",
         default=argparse.SUPPRESS,
         type=Path,
-        help="Script directory.",
+        help="Script directory. If not provided, Skyr will look for scripts in"
+             "'.skyr' and then 'script'",
         metavar="DIR",
     )
     return parser
