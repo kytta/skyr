@@ -95,6 +95,17 @@ def test_try_execute(
         assert expected_err in err
 
 
+def test_main_warns_if_provided_script_dir_doesnt_exist(monkeypatch, capsys):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR / "bad_cwd")
+
+        with pytest.raises(SystemExit):
+            skyr.main(["--script-dir", "my-scripts"])
+
+        _, err = capsys.readouterr()
+        assert "Script directory not found" in err
+
+
 @pytest.mark.parametrize(
     "argv", [
         ["doesnt_exist"],

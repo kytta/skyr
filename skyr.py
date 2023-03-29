@@ -14,7 +14,10 @@ from typing import Union
 
 __version__ = metadata.version("skyr")
 
-DEFAULT_DIR = Path("./script/")
+
+def _warn(msg: str) -> None:
+    sys.stderr.write(f"[WARNING] {msg}\n")
+    sys.stderr.flush()
 
 
 def _err(msg: str) -> None:
@@ -109,9 +112,9 @@ def _get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--script-dir",
-        default=DEFAULT_DIR,
+        default=argparse.SUPPRESS,
         type=Path,
-        help="Location of the script files.",
+        help="Script directory.",
         metavar="DIR",
     )
     return parser
@@ -120,13 +123,18 @@ def _get_parser() -> argparse.ArgumentParser:
 def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
     args, rest = _get_parser().parse_known_args(argv)
 
-    candidates = [args.script_dir, Path(".skyr"), Path("script")]
-    script_dir = find_dir(candidates)
+    script_dir = None
+    if hasattr(args, "script_dir"):
+        if args.script_dir.exists():
+            script_dir = args.script_dir
+        else:
+            _warn(f"Script directory not found: {str(args.script_dir)}")
+
     if script_dir is None:
-        _err(
-            f"No script directory found. "
-            f"Searched in: {', '.join([str(c) for c in candidates if c])}",
-        )
+        script_dir = find_dir([Path(".skyr"), Path("script")])
+
+    if script_dir is None:
+        _err("No script directory found.")
         raise SystemExit(1)
 
     script_file = find_script(args.script, script_dir=script_dir)
