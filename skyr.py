@@ -25,9 +25,7 @@ def _err(msg: str) -> None:
     sys.stderr.flush()
 
 
-def find_dir(
-    candidates: Iterable[Union[str, os.PathLike[str], Path]],
-) -> Optional[Path]:
+def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
     """Searches an array for an existent directory.
 
     :param candidates: Directories or names that will be searched
