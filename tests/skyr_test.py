@@ -123,6 +123,19 @@ def test_main(script_name: str, monkeypatch):
         assert excinfo.value.code == 1
 
 
+def test_main_fails_if_no_script_dir_found(monkeypatch, capsys):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR / "bad_cwd")
+
+        with pytest.raises(SystemExit) as excinfo:
+            skyr.main()
+
+        assert excinfo.value.code == 1
+
+        _, err = capsys.readouterr()
+        assert "No script directory found." in err
+
+
 @pytest.mark.parametrize(
     ("argv", "expected_out"), [
         ([], b"I'm a build script"),

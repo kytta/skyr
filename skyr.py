@@ -126,13 +126,21 @@ def _get_parser() -> argparse.ArgumentParser:
 def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
     args, rest = _get_parser().parse_known_args(argv)
 
-    script_file = find_script(args.script, script_dir=args.script_dir)
+    candidates = [args.script_dir, Path(".skyr"), Path("script")]
+    script_dir = find_dir(candidates)
+    if script_dir is None:
+        _err(
+            f"No script directory found. "
+            f"Searched in: {', '.join([str(c) for c in candidates if c])}",
+        )
+        raise SystemExit(1)
 
+    script_file = find_script(args.script, script_dir=script_dir)
     if script_file is None:
         _err(f"Couldn't find script {args.script!r}")
         raise SystemExit(1)
 
-    try_execute(f"{args.script_dir / args.script}", script_file, rest)
+    try_execute(f"{script_dir / args.script}", script_file, rest)
 
 
 if __name__ == "__main__":
