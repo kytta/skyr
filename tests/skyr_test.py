@@ -1,7 +1,9 @@
 import subprocess
 from pathlib import Path
+from typing import Iterable
 from typing import List
 from typing import Optional
+from typing import Sequence
 
 import pytest
 
@@ -22,36 +24,42 @@ def test_argpase_exits_zero(argv: List[str], return_code: int):
 
 
 @pytest.mark.parametrize(
-    ("name", "script_dir", "return_value", "expected_err"), [
-        ("build", None, ASSETS_DIR / "script/build", None),
-        ("build", "./other_dir", ASSETS_DIR / "other_dir/build", None),
-        ("build", "./doesnt-exist", None, "Script directory doesn't exist"),
-        ("build", "./a_file", None, "Script directory is not a directory"),
-        ("doesnt-exist", None, None, "Script doesn't exist"),
-        ("a_dir", None, None, "Script is not a file"),
+    ("candidates", "return_value"), [
+        ([], None),
+        (["nonexistentdir"], None),
+        (["script"], ASSETS_DIR / "script"),
+        (["nonexistentdir", "other_dir"], ASSETS_DIR / "other_dir"),
+        (["a_file"], None),
     ],
 )
-def test_find_script(
-    name: str,
-    script_dir: Optional[str],
+def test_find_dir(
+    candidates: Iterable[str],
     return_value: Optional[Path],
-    expected_err: Optional[str],
-    capsys,
     monkeypatch,
 ):
     with monkeypatch.context() as m:
         m.chdir(Path(__file__).parent / "assets")
+        assert skyr.find_dir(candidates) == return_value
 
-        if script_dir is None:
-            actual = skyr.find_script(name)
-        else:
-            actual = skyr.find_script(name, Path(script_dir))
+
+@pytest.mark.parametrize(
+    ("name", "return_value", "expected_err"), [
+        ("build", ASSETS_DIR / "script/build", None),
+        ("doesnt-exist", None, "Script doesn't exist"),
+        ("a_dir", None, "Script is not a file"),
+    ],
+)
+def test_find_script(
+    name: str,
+    return_value: Optional[Path],
+    expected_err: Optional[str],
+    capsys,
+):
+    assert skyr.find_script(name, ASSETS_DIR / "script") == return_value
+
+    if expected_err is not None:
         captured = capsys.readouterr()
-
-        assert actual == return_value
-
-        if expected_err is not None:
-            assert expected_err in captured.err
+        assert expected_err in captured.err
 
 
 @pytest.mark.parametrize(
@@ -87,20 +95,44 @@ def test_try_execute(
         assert expected_err in err
 
 
+def test_main_warns_if_provided_script_dir_doesnt_exist(monkeypatch, capsys):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR / "bad_cwd")
+
+        with pytest.raises(SystemExit):
+            skyr.main(["--script-dir", "my-scripts"])
+
+        _, err = capsys.readouterr()
+        assert "Script directory not found" in err
+
+
 @pytest.mark.parametrize(
-    "script_name", [
-        "doesnt_exist",
-        "no-shebang",
+    "argv", [
+        ["doesnt_exist"],
+        ["no-shebang"],
     ],
 )
-def test_main(script_name: str, monkeypatch):
+def test_main_fails(argv: Sequence[str], monkeypatch):
     with monkeypatch.context() as m:
         m.chdir(Path(__file__).parent / "assets")
 
         with pytest.raises(SystemExit) as excinfo:
-            skyr.main(script_name)
+            skyr.main(argv)
 
         assert excinfo.value.code == 1
+
+
+def test_main_fails_if_no_script_dir_found(monkeypatch, capsys):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR / "bad_cwd")
+
+        with pytest.raises(SystemExit) as excinfo:
+            skyr.main()
+
+        assert excinfo.value.code == 1
+
+        _, err = capsys.readouterr()
+        assert "No script directory found." in err
 
 
 @pytest.mark.parametrize(

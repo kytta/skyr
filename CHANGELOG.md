@@ -1,5 +1,18 @@
 # Skyr / Change Log
 
+## Unreleased
+
+### Added
+
+* [#9](https://github.com/kytta/skyr/issues/9):
+  Allow execution of scripts from `./.skyr/`.
+
+### Changed
+
+* due to [#9](https://github.com/kytta/skyr/issues/9):
+  script directory resolution logic was changed: if provided script dir doesn't
+  exist, Skyr will fall back to `./.skyr/`, then `./script/`
+
 ## 0.1.1 - 2023-03-29
 
 ## Fixed
@@ -11,7 +24,7 @@
 
 * [#7](https://github.com/kytta/skyr/pull/7):
   Eat our own dog food
-  * this means, Skyr uses Skyr scripts ✨ 
+  * this means, Skyr uses Skyr scripts ✨
 * [#12](https://github.com/kytta/skyr/pull/12):
   Add GitHub Pages site
 

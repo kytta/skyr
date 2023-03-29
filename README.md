@@ -43,8 +43,8 @@ If you don't provide the script name, it will default to `build`:
 skyr  # same as 'skyr build'
 ```
 
-By default, Skyr searches for your scripts inside `./script`. To change that,
-use `--script-dir`:
+By default, Skyr searches for your scripts inside `./.skyr/` and `./script`. To
+change that, use `--script-dir`:
 
 ```sh
 skyr --script-dir ./dev/ test

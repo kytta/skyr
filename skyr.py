@@ -5,14 +5,19 @@ import os
 import sys
 from importlib import metadata
 from pathlib import Path
+from typing import Iterable
 from typing import List
 from typing import NoReturn
 from typing import Optional
 from typing import Sequence
+from typing import Union
 
 __version__ = metadata.version("skyr")
 
-DEFAULT_DIR = Path("./script/")
+
+def _warn(msg: str) -> None:
+    sys.stderr.write(f"[WARNING] {msg}\n")
+    sys.stderr.flush()
 
 
 def _err(msg: str) -> None:
@@ -20,19 +25,27 @@ def _err(msg: str) -> None:
     sys.stderr.flush()
 
 
-def find_script(name: str, script_dir: Path = DEFAULT_DIR) -> Optional[Path]:
-    """Tries to find a script to run."""
-    resolved_script_dir = script_dir.resolve()
+def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
+    """Searches an array for an existent directory.
 
-    if not resolved_script_dir.exists():
-        _err(f"Script directory doesn't exist: {str(resolved_script_dir)}")
-        return None
+    :param candidates: Directories or names that will be searched
+    :return: First existent directory, or ``None`` if not found.
+    """
+    for candidate in candidates:
+        candidate_path = Path(candidate)
+        if candidate_path.is_dir() and candidate_path.exists():
+            return candidate_path.resolve()
 
-    if not resolved_script_dir.is_dir():
-        _err(f"Script directory is not a directory: {str(script_dir)}")
-        return None
+    return None
 
-    script_file = resolved_script_dir / name
+
+def find_script(name: str, script_dir: Path) -> Optional[Path]:
+    """Tries to find a script to run.
+
+    :param name: Name of the script
+    :param script_dir: Directory to search for the scripts
+    """
+    script_file = (script_dir / name).resolve()
 
     if not script_file.exists():
         _err(f"Script doesn't exist: {str(script_file)}")
@@ -94,9 +107,10 @@ def _get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--script-dir",
-        default=DEFAULT_DIR,
+        default=argparse.SUPPRESS,
         type=Path,
-        help="Location of the script files.",
+        help="Script directory. If not provided, Skyr will look for scripts in"
+             "'.skyr' and then 'script'",
         metavar="DIR",
     )
     return parser
@@ -105,13 +119,26 @@ def _get_parser() -> argparse.ArgumentParser:
 def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
     args, rest = _get_parser().parse_known_args(argv)
 
-    script_file = find_script(args.script, script_dir=args.script_dir)
+    script_dir = None
+    if hasattr(args, "script_dir"):
+        if args.script_dir.exists():
+            script_dir = args.script_dir
+        else:
+            _warn(f"Script directory not found: {str(args.script_dir)}")
 
+    if script_dir is None:
+        script_dir = find_dir([Path(".skyr"), Path("script")])
+
+    if script_dir is None:
+        _err("No script directory found.")
+        raise SystemExit(1)
+
+    script_file = find_script(args.script, script_dir=script_dir)
     if script_file is None:
         _err(f"Couldn't find script {args.script!r}")
         raise SystemExit(1)
 
-    try_execute(f"{args.script_dir / args.script}", script_file, rest)
+    try_execute(f"{script_dir / args.script}", script_file, rest)
 
 
 if __name__ == "__main__":
