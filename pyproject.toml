@@ -1,13 +1,13 @@
 [build-system]
-requires = ["setuptools>=61", "setuptools_scm[toml]>=6.2"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "skyr"
 description = "A low-fat task runner."
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "ISC License"}
+license = "ISC"
 authors = [
     { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
@@ -23,8 +23,13 @@ classifiers = [
     "Operating System :: MacOS",
     "Operating System :: POSIX",
     "Operating System :: Unix",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Software Development :: Build Tools",
     "Topic :: Utilities",
     "Typing :: Typed",
@@ -39,8 +44,29 @@ Issues = "https://github.com/kytta/skyr/issues"
 [project.scripts]
 skyr = "skyr:main"
 
-[tool.setuptools]
-py-modules = ["skyr"]
+[tool.hatch.version]
+path = "src/skyr/__init__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest",
+  "coverage[toml]",
+  "covdefaults",
+]
+
+[tool.hatch.envs.default.scripts]
+test = [
+    "pytest {args:tests}",
+]
+cov = [
+    "coverage erase",
+    "coverage run -m pytest {args:tests}",
+    "coverage report",
+    "coverage xml"
+]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["38", "39", "310", "311"]
 
 [tool.autopep8]
 ignore = ["W503"]

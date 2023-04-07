@@ -3,7 +3,6 @@ import argparse
 import errno
 import os
 import sys
-from importlib import metadata
 from pathlib import Path
 from typing import Iterable
 from typing import List
@@ -12,7 +11,7 @@ from typing import Optional
 from typing import Sequence
 from typing import Union
 
-__version__ = metadata.version("skyr")
+__version__ = "0.2.0"
 
 
 def _warn(msg: str) -> None:
@@ -139,7 +138,3 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         raise SystemExit(1)
 
     try_execute(f"{script_dir / args.script}", script_file, rest)
-
-
-if __name__ == "__main__":
-    main()

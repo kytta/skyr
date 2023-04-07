@@ -1,5 +1,11 @@
 # Skyr / Change Log
 
+## Unreleased
+
+### Behind-the-scenes
+
+* Migrated to Hatch as task runner and build system
+
 ## 0.2.0 - 2023-03-29
 
 ### Added
