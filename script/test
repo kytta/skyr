@@ -2,6 +2,4 @@
 
 set -eux
 
-coverage erase
-coverage run -m pytest tests
-coverage report
+hatch run test
