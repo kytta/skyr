@@ -45,7 +45,7 @@ Issues = "https://github.com/kytta/skyr/issues"
 skyr = "skyr:main"
 
 [tool.hatch.version]
-path = "src/skyr/__init__.py"
+path = "skyr.py"
 
 [tool.hatch.envs.default]
 dependencies = [
