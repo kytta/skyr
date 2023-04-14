@@ -211,14 +211,23 @@ def test_list(capsys, monkeypatch):
         assert "Available scripts" not in err
 
 
-def test_list_in_a_tty(capsys, monkeypatch):
+@pytest.mark.parametrize(
+    "is_stderr_a_tty", [
+        False,
+        True,
+    ],
+)
+def test_list_in_a_tty(is_stderr_a_tty: bool, capsys, monkeypatch):
     with monkeypatch.context() as m:
         m.chdir(ASSETS_DIR)
         m.setattr("sys.stdout.isatty", lambda: True)
-        m.setattr("sys.stderr.isatty", lambda: True)
+        m.setattr("sys.stderr.isatty", lambda: is_stderr_a_tty)
 
         with pytest.raises(SystemExit):
             skyr.main(["--list"])
 
         _, err = capsys.readouterr()
-        assert "Available scripts" in err
+        if is_stderr_a_tty:
+            assert "Available scripts" in err
+        else:
+            assert "Available scripts" not in err
