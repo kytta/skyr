@@ -20,13 +20,29 @@ def _print_scripts(scripts: Iterable[Path], header: str) -> None:
         sys.stderr.write(f"{header}:\n")
         sys.stderr.flush()
 
-    sys.stdout.write(
-        indent(
-            "\n".join(s.name for s in scripts),
-            "    ",
-            lambda _: sys.stdout.isatty(),
-        ),
-    )
+    for script_file in scripts:
+        script_name = script_file.name
+        try:
+            validate_script(script_file)
+            sys.stdout.write(
+                indent(
+                    script_name,
+                    "    ",
+                    lambda _: sys.stdout.isatty(),
+                ),
+            )
+        except OSError as exc:
+            # TODO: check color support
+            sys.stdout.write(
+                indent(
+                    f"\033[2;9m{script_name}\033[0m\t{exc}",
+                    "    ",
+                    lambda _: sys.stdout.isatty(),
+                ),
+            )
+        finally:
+            sys.stdout.write("\n")
+
     sys.stdout.flush()
 
 
