@@ -2,6 +2,7 @@ import subprocess
 import sys
 from collections.abc import Iterable
 from collections.abc import Sequence
+from contextlib import nullcontext
 from pathlib import Path
 
 import pytest
@@ -22,6 +23,39 @@ ASSETS_DIR = Path(__file__).parent / "assets"
 def test_argpase_exits_zero(argv: list[str], return_code: int):
     with pytest.raises(SystemExit):
         assert skyr.main(argv) == return_code
+
+
+@pytest.mark.parametrize(
+    ("input_path", "context", "expected"),
+    [
+        (
+            ASSETS_DIR / "script/build",
+            nullcontext(),
+            (ASSETS_DIR / "script/build").resolve(),
+        ),
+        (
+            ASSETS_DIR / "idonotexist",
+            pytest.raises(FileNotFoundError),
+            None,
+        ),
+        (
+            ASSETS_DIR / "script/a_dir",
+            pytest.raises(OSError),  # noqa: PT011
+            None,
+        ),
+        (
+            ASSETS_DIR / "script/not-executable",
+            pytest.raises(OSError),  # noqa: PT011
+            None,
+        ),
+    ],
+)
+def test_validate_script(input_path: Path, context, expected):
+    with context:
+        retval = skyr.validate_script(input_path)
+
+    if expected is not None:
+        assert retval == expected
 
 
 @pytest.mark.parametrize(
