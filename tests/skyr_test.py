@@ -6,6 +6,7 @@ from typing import Optional
 from typing import Sequence
 
 import pytest
+
 import skyr
 
 ASSETS_DIR = Path(__file__).parent / "assets"

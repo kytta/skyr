@@ -138,3 +138,7 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         raise SystemExit(1)
 
     try_execute(f"{script_dir / args.script}", script_file, rest)
+
+
+if __name__ == "__main__":
+    main()
