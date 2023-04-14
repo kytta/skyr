@@ -33,17 +33,17 @@ def test_argpase_exits_zero(argv: list[str], return_code: int):
         ),
         (
             ASSETS_DIR / "idonotexist",
-            pytest.raises(FileNotFoundError),
+            pytest.raises(skyr.ScriptNotFoundError),
             None,
         ),
         (
             ASSETS_DIR / "script/a_dir",
-            pytest.raises(OSError),  # noqa: PT011
+            pytest.raises(skyr.ScriptIsNotAFileError),
             None,
         ),
         (
             ASSETS_DIR / "script/not-executable",
-            pytest.raises(OSError),  # noqa: PT011
+            pytest.raises(skyr.ScriptIsNotExecutableError),
             None,
         ),
     ],

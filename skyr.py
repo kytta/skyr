@@ -15,6 +15,30 @@ from typing import Union
 __version__ = "0.3.1"
 
 
+class SkyrError(Exception):
+    def __init__(self, script_file: Path, error_message: str) -> None:
+        self.file = script_file
+        self.message = error_message
+
+    def __str__(self) -> str:
+        return f"{self.message}: {self.file}"
+
+
+class ScriptNotFoundError(SkyrError):
+    def __init__(self, script_file: Path) -> None:
+        super().__init__(script_file, "script not found")
+
+
+class ScriptIsNotAFileError(SkyrError):
+    def __init__(self, script_file: Path) -> None:
+        super().__init__(script_file, "script is not a file")
+
+
+class ScriptIsNotExecutableError(SkyrError):
+    def __init__(self, script_file: Path) -> None:
+        super().__init__(script_file, "script is not executable")
+
+
 def _print_scripts(scripts: Iterable[Path], header: str) -> None:
     if sys.stdout.isatty() and sys.stderr.isatty():
         sys.stderr.write(f"{header}:\n")
@@ -31,11 +55,11 @@ def _print_scripts(scripts: Iterable[Path], header: str) -> None:
                     lambda _: sys.stdout.isatty(),
                 ),
             )
-        except OSError as exc:
+        except SkyrError as exc:
             # TODO: check color support
             sys.stdout.write(
                 indent(
-                    f"\033[2;9m{script_name}\033[0m\t{exc}",
+                    f"\033[2;9m{script_name}\033[0m\t{exc.message}",
                     "    ",
                     lambda _: sys.stdout.isatty(),
                 ),
@@ -67,16 +91,13 @@ def validate_script(script_file: Path) -> Path:
     :return: the validated and resolved path
     """
     if not script_file.exists():
-        m = f"Script doesn't exist: {script_file!s}"
-        raise FileNotFoundError(m)
+        raise ScriptNotFoundError(script_file)
 
     if not script_file.is_file():
-        m = f"Script is not a file: {script_file!s}"
-        raise OSError(m)
+        raise ScriptIsNotAFileError(script_file)
 
     if not os.access(script_file, os.X_OK):
-        m = f"Script is not executable: {script_file!s}"
-        raise OSError(m)
+        raise ScriptIsNotExecutableError(script_file)
 
     return script_file.resolve()
 
@@ -222,7 +243,7 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
 
     try:
         script_file = validate_script(script_map[args.script])
-    except OSError as exc:
+    except SkyrError as exc:
         _err(str(exc))
         raise SystemExit(1) from exc
 
