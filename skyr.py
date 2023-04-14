@@ -16,7 +16,7 @@ __version__ = "0.3.1"
 
 
 def _print_scripts(scripts: list[Path], header: str) -> None:
-    if sys.stdout.isatty():
+    if sys.stdout.isatty() and sys.stderr.isatty():
         sys.stderr.write(f"{header}:\n")
         sys.stderr.flush()
 
