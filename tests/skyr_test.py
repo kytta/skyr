@@ -218,14 +218,23 @@ def test_list(capsys, monkeypatch):
         assert "Available scripts" not in out
 
 
-def test_list_in_a_tty(capsys, monkeypatch):
+@pytest.mark.parametrize(
+    "is_stdout_a_tty",
+    [
+        False,
+        True,
+    ],
+)
+def test_list_in_a_tty(is_stdout_a_tty: bool, capsys, monkeypatch):
     with monkeypatch.context() as m:
         m.chdir(ASSETS_DIR)
-        m.setattr("sys.stdout.isatty", lambda: True)
-        m.setattr("sys.stderr.isatty", lambda: True)
+        m.setattr("sys.stdout.isatty", lambda: is_stdout_a_tty)
 
         with pytest.raises(SystemExit):
             skyr.main(["--list"])
 
         out, _ = capsys.readouterr()
-        assert "Available scripts" in out
+        if is_stdout_a_tty:
+            assert "Available scripts" in out
+        else:
+            assert "Available scripts" not in out
