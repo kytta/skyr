@@ -123,6 +123,10 @@ select = [
     "TRY",     # tryceratops
     "RUF",     # ruff
 ]
+extend-ignore = [
+    "EM102",
+    "TRY003",
+]
 
 
 [tool.ruff.mccabe]

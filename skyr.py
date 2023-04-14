@@ -14,6 +14,18 @@ from typing import Union
 __version__ = "0.2.0"
 
 
+def _print_scripts(scripts: List[Path], header: str) -> None:
+    indent = ""
+    if sys.stdout.isatty():
+        indent = "    "
+        sys.stderr.write(f"{header}:\n")
+        sys.stderr.flush()
+
+    for script_file in scripts:
+        sys.stdout.write(f"{indent}{str(script_file.name)}\n")
+    sys.stdout.flush()
+
+
 def _warn(msg: str) -> None:
     sys.stderr.write(f"[WARNING] {msg}\n")
     sys.stderr.flush()
@@ -22,6 +34,28 @@ def _warn(msg: str) -> None:
 def _err(msg: str) -> None:
     sys.stderr.write(f"[ERROR] {msg}\n")
     sys.stderr.flush()
+
+
+def validate_script(script_file: Path) -> Path:
+    """Validates the script file path.
+
+    Checks if the path to the script file exists, is a file, and can be
+    executed. If any of the checks doesn't pass, raises an exception.
+    If the script seems to be valid, returns it's resolved path.
+
+    :param script_file: Path to the script to validate
+    :return: the validated and resolved path
+    """
+    if not script_file.exists():
+        raise FileNotFoundError(f"Script doesn't exist: {str(script_file)}")
+
+    if not script_file.is_file():
+        raise OSError(f"Script is not a file: {str(script_file)}")
+
+    if not os.access(script_file, os.X_OK):
+        raise OSError(f"Script is not executable: {str(script_file)}")
+
+    return script_file.resolve()
 
 
 def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
@@ -36,6 +70,18 @@ def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
             return candidate_path.resolve()
 
     return None
+
+
+def get_available_scripts(script_dir: Path) -> List[Path]:
+    result = []
+
+    for script_file in script_dir.iterdir():
+        try:
+            result.append(validate_script(script_file))
+        except OSError:
+            continue
+
+    return result
 
 
 def find_script(name: str, script_dir: Path) -> Optional[Path]:
@@ -112,6 +158,13 @@ def _get_parser() -> argparse.ArgumentParser:
              "'.skyr' and then 'script'",
         metavar="DIR",
     )
+    parser.add_argument(
+        "--list",
+        "-l",
+        action="store_true",
+        default=argparse.SUPPRESS,
+        help="show all available scripts and exit",
+    )
     return parser
 
 
@@ -131,6 +184,10 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
     if script_dir is None:
         _err("No script directory found.")
         raise SystemExit(1)
+
+    if args.list:
+        _print_scripts(get_available_scripts(script_dir), "Available scripts")
+        raise SystemExit(0)
 
     script_file = find_script(args.script, script_dir=script_dir)
     if script_file is None:
