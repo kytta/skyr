@@ -89,6 +89,18 @@ def _available_scripts(script_dir: Path) -> Generator[str, None, None]:
             yield script_file.name
 
 
+def get_script_map(script_dir: Path) -> dict[str, Path]:
+    """Return a mapping of script names to the actual script files.
+
+    Note that this *does not* validate the scripts, but rather
+    just returns the list of files in the directory.
+    """
+    return {
+        name: (script_dir / name).resolve()
+        for name in _available_scripts(script_dir)
+    }
+
+
 def find_script(name: str, script_dir: Path) -> Path | None:
     """Try to find a script to run.
 
@@ -192,8 +204,10 @@ def main(argv: Sequence[str] | None = None) -> NoReturn:
         _err("No script directory found.")
         raise SystemExit(1)
 
+    script_map = get_script_map(script_dir)
+
     if hasattr(args, "list"):
-        _print_list(_available_scripts(script_dir), "Available scripts:")
+        _print_list(script_map.keys(), "Available scripts")
         raise SystemExit(0)
 
     script_file = find_script(args.script, script_dir=script_dir)
