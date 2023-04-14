@@ -200,12 +200,17 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         _print_scripts(script_map.values(), "Available scripts")
         raise SystemExit(0)
 
-    script_file = find_script(args.script, script_dir=script_dir)
-    if script_file is None:
-        _err(f"Couldn't find script {args.script!r}")
+    if args.script not in script_map:
+        _err(f"Can't find script: {args.script}")
         raise SystemExit(1)
 
-    try_execute(f"{script_dir / args.script}", script_file, rest)
+    try:
+        script_file = validate_script(script_map[args.script])
+    except OSError as exc:
+        _err(str(exc))
+        raise SystemExit(1) from exc
+
+    try_execute(args.script, script_file, rest)
 
 
 if __name__ == "__main__":
