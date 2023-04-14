@@ -75,15 +75,20 @@ def test_find_dir(
         assert skyr.find_dir(candidates) == return_value
 
 
-def test_get_available_scripts():
-    retval = skyr.get_available_scripts(ASSETS_DIR / "script")
+def test_get_script_map():
+    retval = skyr.get_script_map(ASSETS_DIR / "script")
 
-    assert ASSETS_DIR / "script" / "build" in retval
-    assert ASSETS_DIR / "script" / "hello" in retval
-    assert ASSETS_DIR / "script" / "no-shebang" in retval
-    assert ASSETS_DIR / "script" / "not-executable" in retval
+    # Test that a normal script resolves
+    assert "build" in retval
+    assert retval["build"] == (ASSETS_DIR / "script/build").resolve()
 
-    assert ASSETS_DIR / "script" / "a_dir" not in retval
+    # Test inclusion of other script files
+    assert "hello" in retval
+    assert "no-shebang" in retval
+    assert "not-executable" in retval
+
+    # Test that only files are in the list
+    assert "a_dir" not in retval
 
 
 @pytest.mark.parametrize(

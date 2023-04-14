@@ -4,6 +4,7 @@ import errno
 import os
 import sys
 from pathlib import Path
+from typing import Dict
 from typing import Iterable
 from typing import List
 from typing import NoReturn
@@ -14,7 +15,7 @@ from typing import Union
 __version__ = "0.2.0"
 
 
-def _print_scripts(scripts: List[Path], header: str) -> None:
+def _print_scripts(scripts: Iterable[Path], header: str) -> None:
     indent = ""
     if sys.stdout.isatty():
         indent = "    "
@@ -74,17 +75,17 @@ def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
     return None
 
 
-def get_available_scripts(script_dir: Path) -> List[Path]:
-    """Return list of all scripts in the directory.
+def get_script_map(script_dir: Path) -> Dict[str, Path]:
+    """Return a mapping of script names to the actual script files.
 
     Note that this method *does not* validate the scripts, but rather
     just returns the list of files in the directory.
     """
-    return [
-        path
+    return {
+        path.name: path.resolve()
         for path in script_dir.iterdir()
         if path.is_file()
-    ]
+    }
 
 
 def find_script(name: str, script_dir: Path) -> Optional[Path]:
@@ -188,8 +189,10 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         _err("No script directory found.")
         raise SystemExit(1)
 
+    script_map = get_script_map(script_dir)
+
     if hasattr(args, "list") and args.list:
-        _print_scripts(get_available_scripts(script_dir), "Available scripts")
+        _print_scripts(script_map.values(), "Available scripts")
         raise SystemExit(0)
 
     script_file = find_script(args.script, script_dir=script_dir)
