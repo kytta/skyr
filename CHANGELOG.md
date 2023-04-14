@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+* [#24](https://github.com/kytta/skyr/issues/24):
+  You can now run `skyr --list` to display all available scripts
+
 ### Behind-the-scenes
 
 * Migrated to Hatch as task runner and build system
