@@ -75,15 +75,16 @@ def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
 
 
 def get_available_scripts(script_dir: Path) -> List[Path]:
-    result = []
+    """Return list of all scripts in the directory.
 
-    for script_file in script_dir.iterdir():
-        try:
-            result.append(validate_script(script_file))
-        except OSError:
-            continue
-
-    return result
+    Note that this method *does not* validate the scripts, but rather
+    just returns the list of files in the directory.
+    """
+    return [
+        path
+        for path in script_dir.iterdir()
+        if path.is_file()
+    ]
 
 
 def find_script(name: str, script_dir: Path) -> Optional[Path]:
