@@ -6,6 +6,8 @@
 
 - [#57](https://github.com/kytta/skyr/pull/57):
   Support for Python 3.13
+- [#24](https://github.com/kytta/skyr/issues/24):
+  You can now run `skyr --list` to display all available scripts
 
 ### Behind-the-scenes
 
