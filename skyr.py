@@ -185,7 +185,7 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         _err("No script directory found.")
         raise SystemExit(1)
 
-    if args.list:
+    if hasattr(args, "list") and args.list:
         _print_scripts(get_available_scripts(script_dir), "Available scripts")
         raise SystemExit(0)
 
