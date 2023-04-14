@@ -15,7 +15,7 @@ from typing import Union
 __version__ = "0.3.1"
 
 
-def _print_scripts(scripts: list[Path], header: str) -> None:
+def _print_scripts(scripts: Iterable[Path], header: str) -> None:
     if sys.stdout.isatty() and sys.stderr.isatty():
         sys.stderr.write(f"{header}:\n")
         sys.stderr.flush()
@@ -79,17 +79,17 @@ def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
     return None
 
 
-def get_available_scripts(script_dir: Path) -> list[Path]:
-    """Return list of all scripts in the directory.
+def get_script_map(script_dir: Path) -> dict[str, Path]:
+    """Return a mapping of script names to the actual script files.
 
     Note that this method *does not* validate the scripts, but rather
     just returns the list of files in the directory.
     """
-    return [
-        path
+    return {
+        path.name: path.resolve()
         for path in script_dir.iterdir()
         if path.is_file()
-    ]
+    }
 
 
 def find_script(name: str, script_dir: Path) -> Optional[Path]:
@@ -194,8 +194,10 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         _err("No script directory found.")
         raise SystemExit(1)
 
+    script_map = get_script_map(script_dir)
+
     if hasattr(args, "list"):
-        _print_scripts(get_available_scripts(script_dir), "Available scripts")
+        _print_scripts(script_map.values(), "Available scripts")
         raise SystemExit(0)
 
     script_file = find_script(args.script, script_dir=script_dir)
