@@ -164,3 +164,34 @@ def test_successful_execution(
         )
 
         assert expected_out in stdout
+
+
+def test_list(capsys, monkeypatch):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR)
+
+        with pytest.raises(SystemExit) as excinfo:
+            skyr.main(["--list"])
+
+        assert excinfo.value.code == 0
+
+        # Check that scripts are validly listed
+        # We do not check for "no-shebang", as it is probably displayed.
+        out, _ = capsys.readouterr()
+        assert "build" in out
+        assert "hello" in out
+        assert "not-executable" not in out
+        assert "Available scripts" not in out
+
+
+def test_list_in_a_tty(capsys, monkeypatch):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR)
+        m.setattr("sys.stdout.isatty", lambda: True)
+        m.setattr("sys.stderr.isatty", lambda: True)
+
+        with pytest.raises(SystemExit):
+            skyr.main(["--list"])
+
+        out, _ = capsys.readouterr()
+        assert "Available scripts" in out
