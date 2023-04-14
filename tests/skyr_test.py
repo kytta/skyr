@@ -78,6 +78,17 @@ def test_find_dir(
         assert skyr.find_dir(candidates) == return_value
 
 
+def test_available_scripts():
+    retval = list(skyr._available_scripts(ASSETS_DIR / "script"))
+
+    assert "build" in retval
+    assert "hello" in retval
+    assert "no-shebang" in retval
+    assert "not-executable" in retval
+
+    assert "a_dir" not in retval
+
+
 @pytest.mark.parametrize(
     ("name", "return_value", "expected_err"),
     [
@@ -209,12 +220,15 @@ def test_list(capsys, monkeypatch):
 
         assert excinfo.value.code == 0
 
-        # Check that scripts are validly listed
-        # We do not check for "no-shebang", as it is probably displayed.
+        # Check that the scripts are listed
+        # Keep in mind that the scripts are not validated at this point
         out, _ = capsys.readouterr()
         assert "build" in out
         assert "hello" in out
-        assert "not-executable" not in out
+        assert "no-shebang" in out
+        assert "not-executable" in out
+
+        # By default, the captured stdout is not TTY
         assert "Available scripts" not in out
 
 

@@ -79,11 +79,14 @@ def find_dir(candidates: Iterable[str | Path]) -> Path | None:
 
 
 def _available_scripts(script_dir: Path) -> Generator[str, None, None]:
+    """Yield all scripts in a directory.
+
+    Note that this *does not* validate the scripts, but rather
+    just returns the list of files in the directory.
+    """
     for script_file in script_dir.iterdir():
-        try:
-            yield validate_script(script_file).name
-        except OSError:
-            continue
+        if script_file.is_file():
+            yield script_file.name
 
 
 def find_script(name: str, script_dir: Path) -> Path | None:
