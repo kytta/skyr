@@ -18,8 +18,10 @@ def _print_scripts(scripts: List[Path], header: str) -> None:
     indent = ""
     if sys.stdout.isatty():
         indent = "    "
-        sys.stderr.write(f"{header}:\n")
-        sys.stderr.flush()
+
+        if sys.stderr.isatty():
+            sys.stderr.write(f"{header}:\n")
+            sys.stderr.flush()
 
     for script_file in scripts:
         sys.stdout.write(f"{indent}{str(script_file.name)}\n")
