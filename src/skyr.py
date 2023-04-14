@@ -101,25 +101,6 @@ def get_script_map(script_dir: Path) -> dict[str, Path]:
     }
 
 
-def find_script(name: str, script_dir: Path) -> Path | None:
-    """Try to find a script to run.
-
-    :param name: Name of the script
-    :param script_dir: Directory to search for the scripts
-    """
-    script_file = (script_dir / name).resolve()
-
-    if not script_file.exists():
-        _err(f"Script doesn't exist: {script_file!s}")
-        return None
-
-    if not script_file.is_file():
-        _err(f"Script is not a file: {script_file!s}")
-        return None
-
-    return script_file
-
-
 def try_execute(
     name: str,
     script_file: Path,
@@ -210,12 +191,17 @@ def main(argv: Sequence[str] | None = None) -> NoReturn:
         _print_list(script_map.keys(), "Available scripts")
         raise SystemExit(0)
 
-    script_file = find_script(args.script, script_dir=script_dir)
-    if script_file is None:
-        _err(f"Couldn't find script {args.script!r}")
+    if args.script not in script_map:
+        _err(f"Can't find script: {args.script}")
         raise SystemExit(1)
 
-    try_execute(f"{script_dir / args.script}", script_file, rest)
+    try:
+        script_file = validate_script(script_map[args.script])
+    except OSError as exc:
+        _err(str(exc))
+        raise SystemExit(1) from exc
+
+    try_execute(args.script, script_file, rest)
 
 
 if __name__ == "__main__":

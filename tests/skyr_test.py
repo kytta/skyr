@@ -95,27 +95,6 @@ def test_get_script_map():
 
 
 @pytest.mark.parametrize(
-    ("name", "return_value", "expected_err"),
-    [
-        ("build", ASSETS_DIR / "script/build", None),
-        ("doesnt-exist", None, "Script doesn't exist"),
-        ("a_dir", None, "Script is not a file"),
-    ],
-)
-def test_find_script(
-    name: str,
-    return_value: Path | None,
-    expected_err: str | None,
-    capsys,
-):
-    assert skyr.find_script(name, ASSETS_DIR / "script") == return_value
-
-    if expected_err is not None:
-        captured = capsys.readouterr()
-        assert expected_err in captured.err
-
-
-@pytest.mark.parametrize(
     ("name", "script_file", "expected_err"),
     [
         (
