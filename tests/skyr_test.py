@@ -1,4 +1,5 @@
 import subprocess
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Iterable
 from typing import List
@@ -24,6 +25,38 @@ def test_argpase_exits_zero(argv: List[str], return_code: int):
 
 
 @pytest.mark.parametrize(
+    ("input_path", "context", "expected"), [
+        (
+            ASSETS_DIR / "script/build",
+            nullcontext(),
+            (ASSETS_DIR / "script/build").resolve(),
+        ),
+        (
+            ASSETS_DIR / "idonotexist",
+            pytest.raises(skyr.ScriptNotFoundError),
+            None,
+        ),
+        (
+            ASSETS_DIR / "script/a_dir",
+            pytest.raises(skyr.ScriptIsNotAFileError),
+            None,
+        ),
+        (
+            ASSETS_DIR / "script/not-executable",
+            pytest.raises(skyr.ScriptIsNotExecutableError),
+            None,
+        ),
+    ],
+)
+def test_validate_script(input_path: Path, context, expected):
+    with context:
+        retval = skyr.validate_script(input_path)
+
+    if expected is not None:
+        assert retval == expected
+
+
+@pytest.mark.parametrize(
     ("candidates", "return_value"), [
         ([], None),
         (["nonexistentdir"], None),
@@ -42,24 +75,20 @@ def test_find_dir(
         assert skyr.find_dir(candidates) == return_value
 
 
-@pytest.mark.parametrize(
-    ("name", "return_value", "expected_err"), [
-        ("build", ASSETS_DIR / "script/build", None),
-        ("doesnt-exist", None, "Script doesn't exist"),
-        ("a_dir", None, "Script is not a file"),
-    ],
-)
-def test_find_script(
-    name: str,
-    return_value: Optional[Path],
-    expected_err: Optional[str],
-    capsys,
-):
-    assert skyr.find_script(name, ASSETS_DIR / "script") == return_value
+def test_get_script_map():
+    retval = skyr.get_script_map(ASSETS_DIR / "script")
 
-    if expected_err is not None:
-        captured = capsys.readouterr()
-        assert expected_err in captured.err
+    # Test that a normal script resolves
+    assert "build" in retval
+    assert retval["build"] == (ASSETS_DIR / "script/build").resolve()
+
+    # Test inclusion of other script files
+    assert "hello" in retval
+    assert "no-shebang" in retval
+    assert "not-executable" in retval
+
+    # Test that only files are in the list
+    assert "a_dir" not in retval
 
 
 @pytest.mark.parametrize(
@@ -158,3 +187,46 @@ def test_successful_execution(
 
         assert result.returncode == 0
         assert expected_out in result.stdout
+
+
+def test_list(capsys, monkeypatch):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR)
+
+        with pytest.raises(SystemExit) as excinfo:
+            skyr.main(["--list"])
+
+        assert excinfo.value.code == 0
+
+        # Check that the scripts are listed
+        # Keep in mind that the scripts are not validated at this point
+        out, err = capsys.readouterr()
+        assert "build" in out
+        assert "hello" in out
+        assert "no-shebang" in out
+        assert "not-executable" in out
+
+        # By default, the captured stdout/stderr are not TTY
+        assert "Available scripts" not in err
+
+
+@pytest.mark.parametrize(
+    "is_stderr_a_tty", [
+        False,
+        True,
+    ],
+)
+def test_list_in_a_tty(is_stderr_a_tty: bool, capsys, monkeypatch):
+    with monkeypatch.context() as m:
+        m.chdir(ASSETS_DIR)
+        m.setattr("sys.stdout.isatty", lambda: True)
+        m.setattr("sys.stderr.isatty", lambda: is_stderr_a_tty)
+
+        with pytest.raises(SystemExit):
+            skyr.main(["--list"])
+
+        _, err = capsys.readouterr()
+        if is_stderr_a_tty:
+            assert "Available scripts" in err
+        else:
+            assert "Available scripts" not in err
