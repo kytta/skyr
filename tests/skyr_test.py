@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from pathlib import Path
 from typing import Iterable
 from typing import List
@@ -153,8 +154,8 @@ def test_successful_execution(
     with monkeypatch.context() as m:
         m.chdir(Path(__file__).parent / "assets")
 
-        cmd = ["python3", "-m", "skyr", *argv]
-        result = subprocess.run(cmd, capture_output=True)
+        stdout = subprocess.check_output(
+            [sys.executable, "-m", "skyr", *argv],  # noqa: S603
+        )
 
-        assert result.returncode == 0
-        assert expected_out in result.stdout
+        assert expected_out in stdout
