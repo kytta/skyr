@@ -66,7 +66,8 @@ def try_execute(
         argv = []
 
     try:
-        os.execl(script_file, name, *argv)
+        # TODO: replace with a subprocess call
+        os.execl(script_file, name, *argv)  # noqa: S606
     except OSError as exc:
         if exc.errno is errno.EACCES:
             _err(
