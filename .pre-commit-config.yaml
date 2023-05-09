@@ -35,7 +35,7 @@ repos:
     rev: v2.0.2
     hooks:
       - id: autopep8
-  - repo: https://github.com/asottile/reorder_python_imports
+  - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.9.0
     hooks:
       - id: reorder-python-imports
@@ -46,16 +46,16 @@ repos:
       - id: add-trailing-comma
         args: [--py36-plus]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.2
+    rev: v3.4.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
   - repo: https://github.com/PyCQA/docformatter
-    rev: v1.6.4
+    rev: v1.6.5
     hooks:
       - id: docformatter
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.263"
+    rev: "v0.0.265"
     hooks:
       - id: ruff
   - repo: https://github.com/pre-commit/mirrors-mypy
