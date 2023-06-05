@@ -47,11 +47,11 @@ def find_script(name: str, script_dir: Path) -> Optional[Path]:
     script_file = (script_dir / name).resolve()
 
     if not script_file.exists():
-        _err(f"Script doesn't exist: {str(script_file)}")
+        _err(f"Script doesn't exist: {script_file!s}")
         return None
 
     if not script_file.is_file():
-        _err(f"Script is not a file: {str(script_file)}")
+        _err(f"Script is not a file: {script_file!s}")
         return None
 
     return script_file
@@ -71,15 +71,15 @@ def try_execute(
     except OSError as exc:
         if exc.errno is errno.EACCES:
             _err(
-                f"You are not allowed to execute {str(script_file)}. Please "
+                f"You are not allowed to execute {script_file!s}. Please "
                 "make sure that you've set the correct rights via chmod.", )
         elif exc.errno is errno.ENOEXEC:
             _err(
-                f"{str(script_file)} has a wrong executable format. Did you "
+                f"{script_file!s} has a wrong executable format. Did you "
                 "forget to add a shebang?",
             )
         else:
-            _err(f"Could not execute {str(script_file)}: {exc.strerror}")
+            _err(f"Could not execute {script_file!s}: {exc.strerror}")
         raise SystemExit(1) from exc
 
 
@@ -124,7 +124,7 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         if args.script_dir.exists():
             script_dir = args.script_dir
         else:
-            _warn(f"Script directory not found: {str(args.script_dir)}")
+            _warn(f"Script directory not found: {args.script_dir!s}")
 
     if script_dir is None:
         script_dir = find_dir([Path(".skyr"), Path("script")])
