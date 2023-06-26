@@ -28,7 +28,7 @@ repos:
       - id: python-no-log-warn
       - id: python-use-type-annotations
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.1.1
+    rev: v2.2.0
     hooks:
       - id: autoflake
   - repo: https://github.com/pre-commit/mirrors-autopep8
@@ -51,14 +51,14 @@ repos:
       - id: pyupgrade
         args: [--py38-plus]
   - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.2
+    rev: v1.7.3
     hooks:
       - id: docformatter
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.272"
+    rev: "v0.0.275"
     hooks:
       - id: ruff
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0
+    rev: v1.4.1
     hooks:
       - id: mypy
