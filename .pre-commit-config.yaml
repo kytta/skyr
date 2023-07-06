@@ -41,12 +41,12 @@ repos:
       - id: reorder-python-imports
         args: [--py37-plus]
   - repo: https://github.com/asottile/add-trailing-comma
-    rev: v2.5.1
+    rev: v3.0.0
     hooks:
       - id: add-trailing-comma
         args: [--py36-plus]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.7.0
+    rev: v3.8.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
@@ -54,8 +54,8 @@ repos:
     rev: v1.7.3
     hooks:
       - id: docformatter
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.275"
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.0.276"
     hooks:
       - id: ruff
   - repo: https://github.com/pre-commit/mirrors-mypy
