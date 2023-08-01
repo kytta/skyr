@@ -1,10 +1,9 @@
 import subprocess
 import sys
+from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Iterable
-from typing import List
 from typing import Optional
-from typing import Sequence
 
 import pytest
 
@@ -19,7 +18,7 @@ ASSETS_DIR = Path(__file__).parent / "assets"
         (["--version"], 0),
     ],
 )
-def test_argpase_exits_zero(argv: List[str], return_code: int):
+def test_argpase_exits_zero(argv: list[str], return_code: int):
     with pytest.raises(SystemExit):
         assert skyr.main(argv) == return_code
 
@@ -147,7 +146,7 @@ def test_main_fails_if_no_script_dir_found(monkeypatch, capsys):
     ],
 )
 def test_successful_execution(
-    argv: List[str],
+    argv: list[str],
     expected_out: bytes,
     monkeypatch,
 ):
