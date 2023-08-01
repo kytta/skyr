@@ -15,7 +15,7 @@ maintainers = [
 authors = [
     { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
@@ -27,7 +27,6 @@ classifiers = [
   "Operating System :: Unix",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -77,7 +76,7 @@ ignore = ["W503"]
 
 [tool.ruff]
 line-length = 79
-target-version = "py38"
+target-version = "py39"
 
 select = [
     "F",       # pyflakes
@@ -120,7 +119,7 @@ addopts = "--tb=short --showlocals"
 plugins = ["covdefaults"]
 
 [tool.mypy]
-python_version = 3.8
+python_version = 3.9
 check_untyped_defs = true
 disallow_any_generics = true
 disallow_incomplete_defs = true
