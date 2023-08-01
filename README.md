@@ -53,23 +53,23 @@ skyr --script-dir ./dev/ test
 ## Roadmap
 
 - [x] Basic script running: Run .sh, .bash, .zsh, and other files from the
-      `script/` directory.
+  `script/` directory.
 - [ ] Target dependencies: Run scripts if other depend on them.
 - [ ] Dependency age: Run scripts only if the files it depends on changed.
 - [ ] Script validation: Check that Skyr understands the scripts it was given.
 - [ ] Make mode: Support running very basic Makefiles.
 - [ ] Make migration mode: Support migrating from a Makefile to a `script/`
-      directory.
+  directory.
 - [ ] Just mode: Support running very basic Justfiles.
 - [ ] Just migration mode: Support migrating from `just` to a `script/`
-      directory.
+  directory.
 
 ## Licence
 
 © 2023 [Nikita Karamov]\
 Code licensed under the [ISC License].
 
----
+______________________________________________________________________
 
 This project is hosted on GitHub:
 <https://github.com/kytta/skyr.git>
