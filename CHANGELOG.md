@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## BREAKING
+
+- [#43](https://github.com/kytta/skyr/pull/43):
+  Drop support for Python 3.8
+
 ### Behind-the-scenes
 
 - Migrated to Hatch as task runner and build system
