@@ -3,12 +3,11 @@ import argparse
 import errno
 import os
 import sys
+from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Iterable
-from typing import List
 from typing import NoReturn
 from typing import Optional
-from typing import Sequence
 from typing import Union
 
 __version__ = "0.2.0"
@@ -60,7 +59,7 @@ def find_script(name: str, script_dir: Path) -> Optional[Path]:
 def try_execute(
     name: str,
     script_file: Path,
-    argv: Optional[List[str]] = None,
+    argv: Optional[list[str]] = None,
 ) -> NoReturn:
     if argv is None:
         argv = []
