@@ -1,5 +1,12 @@
 # Skyr / Change Log
 
+## 0.3.1 - 2023-10-03
+
+### Added
+
+- [#43](https://github.com/kytta/skyr/pull/43):
+  Support for Python 3.12
+
 ## 0.3.0 - 2023-08-01
 
 ## BREAKING

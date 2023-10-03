@@ -10,7 +10,7 @@ from typing import NoReturn
 from typing import Optional
 from typing import Union
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 
 def _warn(msg: str) -> None:
