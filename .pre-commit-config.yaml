@@ -40,7 +40,7 @@ repos:
     hooks:
       - id: autopep8
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "1.5.3"
+    rev: "1.7.0"
     hooks:
       - id: pyproject-fmt
   - repo: https://github.com/google/yamlfmt
@@ -78,7 +78,7 @@ repos:
     hooks:
       - id: docformatter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.1.9"
+    rev: "v0.2.0"
     hooks:
       - id: ruff
   - repo: https://github.com/pre-commit/mirrors-mypy
