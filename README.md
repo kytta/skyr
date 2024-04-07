@@ -17,6 +17,12 @@ into your existing project.
 pipx install skyr
 ```
 
+### Using Homebrew
+
+```sh
+brew install kytta/python/skyr
+```
+
 ### Using plain `pip`
 
 ```sh
