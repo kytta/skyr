@@ -1,5 +1,6 @@
 extend ="../pyproject.toml"
 
+[lint]
 extend-select = [
     "PT",  # flake8-pytest-style
 ]
