@@ -60,3 +60,44 @@ jobs:
 
       - name: Test
         run: python -Im tox run --installpkg dist/*.whl -f py$(echo ${{ matrix.python-version }} | tr -d .)
+
+      - name: Upload coverage data
+        uses: actions/upload-artifact@v4
+        if: startsWith(matrix.os, 'ubuntu-')
+        with:
+          name: coverage-data-${{ matrix.python-version }}
+          path: .coverage.*
+          include-hidden-files: true
+          if-no-files-found: ignore
+
+  coverage:
+    name: Combine & check coverage
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - uses: astral-sh/setup-uv@v1
+      - run: uv pip install --system --upgrade coverage[toml] covdefaults
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-data-*
+          merge-multiple: true
+
+      - name: Combine coverage & report
+        run: |
+          python -Im coverage combine
+          python -Im coverage report || true
+          python -Im coverage html --skip-covered --skip-empty || true
+          python -Im coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: htmlcov
+        if: ${{ failure() }}

@@ -85,6 +85,7 @@ lint.select = [
 addopts = "--tb=short --showlocals"
 
 [tool.coverage.run]
+parallel = true
 plugins = [ "covdefaults" ]
 
 [tool.mypy]
