@@ -17,7 +17,7 @@ permissions: {}
 
 jobs:
   build:
-    name: Build & verify package
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -67,7 +67,7 @@ jobs:
           if-no-files-found: ignore
 
   coverage:
-    name: Combine & check coverage
+    name: Coverage
     needs: test
     runs-on: ubuntu-latest
 
