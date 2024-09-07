@@ -1,14 +1,13 @@
 [build-system]
-build-backend = "hatchling.build"
+build-backend = "flit_core.buildapi"
 requires = [
-  "hatchling",
+  "flit-core<4,>=3.2",
 ]
 
 [project]
 name = "skyr"
-description = "A low-fat task runner."
 readme = "README.md"
-license = "ISC"
+license = { text = "ISC" }
 maintainers = [
   { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
@@ -37,6 +36,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = [
+  "description",
   "version",
 ]
 dependencies = [
@@ -44,11 +44,6 @@ dependencies = [
 urls.Issues = "https://github.com/kytta/skyr/issues"
 urls.Source = "https://github.com/kytta/skyr"
 scripts.skyr = "skyr:main"
-
-[tool.setuptools_scm]
-
-[tool.hatch.version]
-path = "skyr.py"
 
 [tool.autopep8]
 ignore = [ "W503" ]
