@@ -27,3 +27,36 @@ jobs:
 
     outputs:
       python-versions: ${{ steps.baipp.outputs.supported_python_classifiers_json_array }}
+
+  test:
+    name: Test on Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+    runs-on: ${{ matrix.os }}
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJson(needs.build.outputs.python-versions) }}
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download built package
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+      - uses: actions/setup-python@v5
+        with:
+          python-version: |
+            ${{ matrix.python-version }}
+            3.x
+          allow-prereleases: true
+
+      - uses: astral-sh/setup-uv@v2
+      - run: uv pip install --system tox-uv
+
+      - name: Test
+        run: python -Im tox run --installpkg dist/*.whl -f py$(echo ${{ matrix.python-version }} | tr -d .)
