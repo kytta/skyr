@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""A low-fat task runner."""
 import argparse
 import errno
 import os

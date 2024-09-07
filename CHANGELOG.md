@@ -1,5 +1,20 @@
 # Skyr / Change Log
 
+## Unreleased
+
+### Added
+
+- [#57](https://github.com/kytta/skyr/pull/57):
+  Support for Python 3.13
+
+### Behind-the-scenes
+
+- [#57](https://github.com/kytta/skyr/pull/57):
+  Improved CI jobs
+
+- [#57](https://github.com/kytta/skyr/pull/57):
+  Use flit to build packages
+
 ## 0.3.1 - 2023-10-03
 
 ### Added
