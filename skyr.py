@@ -7,11 +7,67 @@ import sys
 from collections.abc import Iterable
 from collections.abc import Sequence
 from pathlib import Path
+from textwrap import indent
 from typing import NoReturn
 from typing import Optional
 from typing import Union
 
 __version__ = "0.3.1"
+
+
+class SkyrError(Exception):
+    def __init__(self, script_file: Path, error_message: str) -> None:
+        self.file = script_file
+        self.message = error_message
+
+    def __str__(self) -> str:
+        return f"{self.message}: {self.file}"
+
+
+class ScriptNotFoundError(SkyrError):
+    def __init__(self, script_file: Path) -> None:
+        super().__init__(script_file, "script not found")
+
+
+class ScriptIsNotAFileError(SkyrError):
+    def __init__(self, script_file: Path) -> None:
+        super().__init__(script_file, "script is not a file")
+
+
+class ScriptIsNotExecutableError(SkyrError):
+    def __init__(self, script_file: Path) -> None:
+        super().__init__(script_file, "script is not executable")
+
+
+def _print_scripts(scripts: Iterable[Path], header: str) -> None:
+    if sys.stdout.isatty() and sys.stderr.isatty():
+        sys.stderr.write(f"{header}:\n")
+        sys.stderr.flush()
+
+    for script_file in scripts:
+        script_name = script_file.name
+        try:
+            validate_script(script_file)
+            sys.stdout.write(
+                indent(
+                    script_name,
+                    "    ",
+                    lambda _: sys.stdout.isatty(),
+                ),
+            )
+        except SkyrError as exc:
+            # TODO: check color support
+            sys.stdout.write(
+                indent(
+                    f"\033[2;9m{script_name}\033[0m\t{exc.message}",
+                    "    ",
+                    lambda _: sys.stdout.isatty(),
+                ),
+            )
+        finally:
+            sys.stdout.write("\n")
+
+    sys.stdout.flush()
 
 
 def _warn(msg: str) -> None:
@@ -22,6 +78,28 @@ def _warn(msg: str) -> None:
 def _err(msg: str) -> None:
     sys.stderr.write(f"[ERROR] {msg}\n")
     sys.stderr.flush()
+
+
+def validate_script(script_file: Path) -> Path:
+    """Validates the script file path.
+
+    Checks if the path to the script file exists, is a file, and can be
+    executed. If any of the checks doesn't pass, raises an exception. If
+    the script seems to be valid, returns it's resolved path.
+
+    :param script_file: Path to the script to validate
+    :return: the validated and resolved path
+    """
+    if not script_file.exists():
+        raise ScriptNotFoundError(script_file)
+
+    if not script_file.is_file():
+        raise ScriptIsNotAFileError(script_file)
+
+    if not os.access(script_file, os.X_OK):
+        raise ScriptIsNotExecutableError(script_file)
+
+    return script_file.resolve()
 
 
 def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
@@ -36,6 +114,19 @@ def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
             return candidate_path.resolve()
 
     return None
+
+
+def get_script_map(script_dir: Path) -> dict[str, Path]:
+    """Return a mapping of script names to the actual script files.
+
+    Note that this method *does not* validate the scripts, but rather
+    just returns the list of files in the directory.
+    """
+    return {
+        path.name: path.resolve()
+        for path in script_dir.iterdir()
+        if path.is_file()
+    }
 
 
 def find_script(name: str, script_dir: Path) -> Optional[Path]:
@@ -113,6 +204,13 @@ def _get_parser() -> argparse.ArgumentParser:
              "'.skyr' and then 'script'",
         metavar="DIR",
     )
+    parser.add_argument(
+        "--list",
+        "-l",
+        action="store_true",
+        default=argparse.SUPPRESS,
+        help="show all available scripts and exit",
+    )
     return parser
 
 
@@ -133,12 +231,23 @@ def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
         _err("No script directory found.")
         raise SystemExit(1)
 
-    script_file = find_script(args.script, script_dir=script_dir)
-    if script_file is None:
-        _err(f"Couldn't find script {args.script!r}")
+    script_map = get_script_map(script_dir)
+
+    if hasattr(args, "list"):
+        _print_scripts(script_map.values(), "Available scripts")
+        raise SystemExit(0)
+
+    if args.script not in script_map:
+        _err(f"Can't find script: {args.script}")
         raise SystemExit(1)
 
-    try_execute(f"{script_dir / args.script}", script_file, rest)
+    try:
+        script_file = validate_script(script_map[args.script])
+    except SkyrError as exc:
+        _err(str(exc))
+        raise SystemExit(1) from exc
+
+    try_execute(args.script, script_file, rest)
 
 
 if __name__ == "__main__":
