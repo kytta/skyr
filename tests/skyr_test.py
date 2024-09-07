@@ -153,8 +153,8 @@ def test_successful_execution(
     with monkeypatch.context() as m:
         m.chdir(Path(__file__).parent / "assets")
 
-        stdout = subprocess.check_output(
-            [sys.executable, "-m", "skyr", *argv],  # noqa: S603
+        stdout = subprocess.check_output(  # noqa: S603
+            [sys.executable, "-m", "skyr", *argv],
         )
 
         assert expected_out in stdout
