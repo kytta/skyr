@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Optional
 
 import pytest
-
 import skyr
 
 ASSETS_DIR = Path(__file__).parent / "assets"
