@@ -109,4 +109,3 @@ jobs:
           python-version: 3.x
       - uses: astral-sh/setup-uv@v2
       - run: uvx mypy src
-

@@ -92,7 +92,7 @@ plugins = [ "covdefaults" ]
 strict = true
 pretty = true
 python_version = "3.9"
-enable_error_code = ["ignore-without-code"]
+enable_error_code = [ "ignore-without-code" ]
 
 [[tool.mypy.overrides]]
 module = "tests.*"
