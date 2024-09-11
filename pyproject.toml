@@ -89,17 +89,11 @@ parallel = true
 plugins = [ "covdefaults" ]
 
 [tool.mypy]
-python_version = 3.9
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
+strict = true
+pretty = true
+python_version = "3.9"
+enable_error_code = [ "ignore-without-code" ]
 
 [[tool.mypy.overrides]]
-module = [ "tests.*" ]
-ignore_missing_imports = true
-check_untyped_defs = false
-disallow_incomplete_defs = false
-disallow_untyped_defs = false
+module = "tests.*"
+ignore_errors = true
