@@ -77,8 +77,8 @@ jobs:
         with:
           python-version: 3.x
 
-      - uses: astral-sh/setup-uv@v1
-      - run: uv pip install --system --upgrade coverage[toml] covdefaults
+      - uses: astral-sh/setup-uv@v2
+      - run: uv tool install --with covdefaults coverage
       - uses: actions/download-artifact@v4
         with:
           pattern: coverage-data-*
@@ -86,10 +86,10 @@ jobs:
 
       - name: Combine coverage & report
         run: |
-          python -Im coverage combine
-          python -Im coverage report || true
-          python -Im coverage html --skip-covered --skip-empty || true
-          python -Im coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+          coverage combine
+          coverage html --skip-covered --skip-empty --fail-under=0
+          coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+          coverage report
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
