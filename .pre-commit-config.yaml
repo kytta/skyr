@@ -37,10 +37,6 @@ repos:
     rev: v2.3.2
     hooks:
       - id: autopep8
-  - repo: https://github.com/tox-dev/tox-ini-fmt
-    rev: 1.7.1
-    hooks:
-      - id: tox-ini-fmt
   - repo: https://github.com/google/yamlfmt
     rev: v0.20.0
     hooks:
