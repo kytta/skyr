@@ -109,6 +109,7 @@ select = [
   "SIM", # flake8-simplify
   "T20", # flake8-print
   "TRY", # tryceratops
+  "UP",  # pyupgrade
   "W",   # pycodestyle
 ]
 

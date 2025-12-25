@@ -4,5 +4,4 @@ set -eux
 
 pre-commit run --all-files autoflake
 pre-commit run --all-files autopep8
-pre-commit run --all-files pyupgrade
 pre-commit run --all-files docformatter
