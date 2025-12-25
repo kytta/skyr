@@ -44,6 +44,20 @@ urls.Issues = "https://github.com/kytta/skyr/issues"
 urls.Source = "https://github.com/kytta/skyr"
 scripts.skyr = "skyr:main"
 
+[dependency-groups]
+dev = [
+  "ruff",
+  { include-group = "tests" },
+]
+tests = [
+  "pytest",
+]
+cov = [
+  "covdefaults",
+  "coverage[toml]",
+  { include-group = "tests" },
+]
+
 [tool.autopep8]
 ignore = [ "W503" ]
 
