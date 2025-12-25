@@ -3,7 +3,6 @@ import sys
 from collections.abc import Iterable
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Optional
 
 import pytest
 import skyr
@@ -33,7 +32,7 @@ def test_argpase_exits_zero(argv: list[str], return_code: int):
 )
 def test_find_dir(
     candidates: Iterable[str],
-    return_value: Optional[Path],
+    return_value: Path | None,
     monkeypatch,
 ):
     with monkeypatch.context() as m:
@@ -50,8 +49,8 @@ def test_find_dir(
 )
 def test_find_script(
     name: str,
-    return_value: Optional[Path],
-    expected_err: Optional[str],
+    return_value: Path | None,
+    expected_err: str | None,
     capsys,
 ):
     assert skyr.find_script(name, ASSETS_DIR / "script") == return_value
