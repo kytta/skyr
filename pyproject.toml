@@ -82,34 +82,24 @@ addopts = "--tb=short --showlocals"
 line-length = 79
 
 [tool.ruff.lint]
-select = [
-  "A",   # flake8-builtins
-  "B",   # flake8-bugbear
-  "BLE", # flake8-blind-except
-  "C4",  # flake8-comprehensions
-  "C90", # mccabe
-  "DTZ", # flake8-datetimez
-  "E",
-  "EM",  # flake8-errmsg
-  "ERA", # eradicate
-  "F",   # pyflakes
-  "FBT", # flake8-boolean-trap
-  "I",   # isort
-  "ICN", # flake8-import-conventions
-  "ISC", # flake8-implicit-str-concat
-  "N",   # pep8-naming
-  "PIE", # flake8-pie
-  "PL",  # pylint
-  "PTH", # flake8-use-pathlib
-  "Q",   # flake8-quotes
-  "RET", # flake8-return
-  "RUF", # ruff
-  "S",   # bandit
-  "SIM", # flake8-simplify
-  "T20", # flake8-print
-  "TRY", # tryceratops
-  "UP",  # pyupgrade
-  "W",   # pycodestyle
+select = ["ALL"]
+ignore = [
+  "AIR",     # we're not Airflow
+  "ANN",     # Mypy is better at this
+  "COM",     # ruff format takes care of our commas
+  "D1",      # We don't care about missing docstrings
+  "D203",    # Class docstrings should not have blank lines
+  "D213",    # Multiline summary should be on first line
+  "DJ",      # we're not Django
+  "E501",    # leave line-length enforcement to ruff format
+  "FAST",    # we're not FastAPI
+  "FIX",     # Yes, we want markers.
+  "ISC001",  # conflicts with ruff format
+  "NPY",     # we're not NumPy
+  "PD",      # we're not pandas
+  "PLC0415", # sometimes, imports have to live elsewhere
+  "TD",      # we don't follow other people's todo style
+  "UP031",   # format() is slow as molasses; % and f'' FTW.
 ]
 
 [tool.ruff.lint.isort]

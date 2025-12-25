@@ -25,7 +25,7 @@ def _err(msg: str) -> None:
 
 
 def find_dir(candidates: Iterable[str | Path]) -> Path | None:
-    """Searches an array for an existent directory.
+    """Search an array for an existent directory.
 
     :param candidates: Directories or names that will be searched
     :return: First existent directory, or ``None`` if not found.
@@ -39,7 +39,7 @@ def find_dir(candidates: Iterable[str | Path]) -> Path | None:
 
 
 def find_script(name: str, script_dir: Path) -> Path | None:
-    """Tries to find a script to run.
+    """Try to find a script to run.
 
     :param name: Name of the script
     :param script_dir: Directory to search for the scripts
