@@ -23,6 +23,9 @@
 - [#57](https://github.com/kytta/skyr/pull/57):
   Use flit to build packages
 
+- [#70](https://codeberg.org/kytta/skyr/pulls/70):
+  Switch to uv for development
+
 ## 0.3.1 - 2023-10-03
 
 ### Added
