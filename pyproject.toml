@@ -102,6 +102,14 @@ ignore = [
   "UP031",   # format() is slow as molasses; % and f'' FTW.
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"**/*_test.py" = [
+  "S",       # security concerns don't matter in tests
+  "PLR0913", # too many function arguments
+  "FBT",     # Boolean positional arg in function definition
+  "TRY",     # exception best practices don't matter in tests
+]
+
 [tool.ruff.lint.isort]
 force-single-line = true
 lines-after-imports = 2
