@@ -2,4 +2,3 @@
 
 set -eux
 
-pre-commit run --all-files autoflake
