@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """A low-fat task runner."""
+
 import argparse
 import errno
 import os
@@ -71,7 +72,8 @@ def try_execute(
         if exc.errno is errno.EACCES:
             _err(
                 f"You are not allowed to execute {script_file!s}. Please "
-                "make sure that you've set the correct rights via chmod.")
+                "make sure that you've set the correct rights via chmod."
+            )
         elif exc.errno is errno.ENOEXEC:
             _err(
                 f"{script_file!s} has a wrong executable format. Did you "
@@ -85,7 +87,7 @@ def try_execute(
 def _get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="A low-fat task runner, Skyr runs scripts from the "
-                    "'./script/' directory in a make(1) fashion.",
+        "'./script/' directory in a make(1) fashion.",
         epilog="Source code: <https://github.com/kytta/skyr>",
         allow_abbrev=False,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -109,7 +111,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=argparse.SUPPRESS,
         type=Path,
         help="Script directory. If not provided, Skyr will look for scripts in"
-             "'.skyr' and then 'script'",
+        "'.skyr' and then 'script'",
         metavar="DIR",
     )
     return parser

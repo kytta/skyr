@@ -12,7 +12,8 @@ ASSETS_DIR = Path(__file__).parent / "assets"
 
 
 @pytest.mark.parametrize(
-    ("argv", "return_code"), [
+    ("argv", "return_code"),
+    [
         (["--help"], 0),
         (["--version"], 0),
     ],
@@ -23,7 +24,8 @@ def test_argpase_exits_zero(argv: list[str], return_code: int):
 
 
 @pytest.mark.parametrize(
-    ("candidates", "return_value"), [
+    ("candidates", "return_value"),
+    [
         ([], None),
         (["nonexistentdir"], None),
         (["script"], ASSETS_DIR / "script"),
@@ -42,7 +44,8 @@ def test_find_dir(
 
 
 @pytest.mark.parametrize(
-    ("name", "return_value", "expected_err"), [
+    ("name", "return_value", "expected_err"),
+    [
         ("build", ASSETS_DIR / "script/build", None),
         ("doesnt-exist", None, "Script doesn't exist"),
         ("a_dir", None, "Script is not a file"),
@@ -62,7 +65,8 @@ def test_find_script(
 
 
 @pytest.mark.parametrize(
-    ("name", "script_file", "expected_err"), [
+    ("name", "script_file", "expected_err"),
+    [
         (
             "script/no-shebang",
             (ASSETS_DIR / "script/no-shebang").resolve(),
@@ -106,7 +110,8 @@ def test_main_warns_if_provided_script_dir_doesnt_exist(monkeypatch, capsys):
 
 
 @pytest.mark.parametrize(
-    "argv", [
+    "argv",
+    [
         ["doesnt_exist"],
         ["no-shebang"],
     ],
@@ -135,7 +140,8 @@ def test_main_fails_if_no_script_dir_found(monkeypatch, capsys):
 
 
 @pytest.mark.parametrize(
-    ("argv", "expected_out"), [
+    ("argv", "expected_out"),
+    [
         ([], b"I'm a build script"),
         (["hello"], b"Hello World!"),
         (

@@ -3,4 +3,3 @@
 set -eux
 
 pre-commit run --all-files autoflake
-pre-commit run --all-files autopep8
