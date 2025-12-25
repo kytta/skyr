@@ -10,24 +10,12 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
-      - id: check-json
       - id: check-toml
       - id: check-yaml
       - id: check-executables-have-shebangs
         exclude: "tests/assets/script/no-shebang"
       - id: check-shebang-scripts-are-executable
         exclude: "tests/assets/script/not-executable"
-      - id: check-ast
-      - id: check-builtin-literals
-      - id: check-docstring-first
-      - id: debug-statements
-  - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
-    hooks:
-      - id: rst-backticks
-      - id: python-no-eval
-      - id: python-no-log-warn
-      - id: python-use-type-annotations
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.10
@@ -48,4 +36,3 @@ repos:
       - id: mdformat
         additional_dependencies:
           - mdformat-gfm
-          - mdformat-footnote
