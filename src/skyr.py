@@ -8,8 +8,6 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 from pathlib import Path
 from typing import NoReturn
-from typing import Optional
-from typing import Union
 
 __version__ = "0.3.1"
 
@@ -24,7 +22,7 @@ def _err(msg: str) -> None:
     sys.stderr.flush()
 
 
-def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
+def find_dir(candidates: Iterable[str | Path]) -> Path | None:
     """Searches an array for an existent directory.
 
     :param candidates: Directories or names that will be searched
@@ -38,7 +36,7 @@ def find_dir(candidates: Iterable[Union[str, Path]]) -> Optional[Path]:
     return None
 
 
-def find_script(name: str, script_dir: Path) -> Optional[Path]:
+def find_script(name: str, script_dir: Path) -> Path | None:
     """Tries to find a script to run.
 
     :param name: Name of the script
@@ -60,7 +58,7 @@ def find_script(name: str, script_dir: Path) -> Optional[Path]:
 def try_execute(
     name: str,
     script_file: Path,
-    argv: Optional[list[str]] = None,
+    argv: list[str] | None = None,
 ) -> NoReturn:
     if argv is None:
         argv = []
@@ -116,7 +114,7 @@ def _get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
+def main(argv: Sequence[str] | None = None) -> NoReturn:
     args, rest = _get_parser().parse_known_args(argv)
 
     script_dir = None
