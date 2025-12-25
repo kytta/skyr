@@ -38,16 +38,16 @@ repos:
     hooks:
       - id: autopep8
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "v2.11.1"
+    rev: v2.11.1
     hooks:
       - id: pyproject-fmt
         args: [--max-supported-python=3.13]
   - repo: https://github.com/tox-dev/tox-ini-fmt
-    rev: "1.7.0"
+    rev: 1.7.1
     hooks:
       - id: tox-ini-fmt
   - repo: https://github.com/google/yamlfmt
-    rev: "v0.20.0"
+    rev: v0.20.0
     hooks:
       - id: yamlfmt
         args:
@@ -80,7 +80,7 @@ repos:
     hooks:
       - id: docformatter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.14.7"
+    rev: v0.14.10
     hooks:
       - id: ruff-check
         args: [--fix]
