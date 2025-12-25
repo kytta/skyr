@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import NoReturn
 
+
 __version__ = "0.3.1"
 
 
