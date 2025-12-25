@@ -8,10 +8,10 @@ requires = [
 name = "skyr"
 readme = "README.md"
 license = { text = "ISC" }
-maintainers = [
+authors = [
   { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
-authors = [
+maintainers = [
   { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
 requires-python = ">=3.11"
@@ -34,15 +34,16 @@ classifiers = [
   "Topic :: Utilities",
   "Typing :: Typed",
 ]
-dynamic = [
-  "description",
-  "version",
-]
-dependencies = [
-]
-urls.Issues = "https://github.com/kytta/skyr/issues"
-urls.Source = "https://github.com/kytta/skyr"
-scripts.skyr = "skyr:main"
+dependencies = []
+dynamic = ["description", "version"]
+
+[project.urls]
+Changelog = "https://codeberg.org/kytta/skyr/src/branch/main/CHANGELOG.md"
+Source = "https://codeberg.org/kytta/skyr"
+Issues = "https://codeberg.org/kytta/skyr/issues"
+
+[project.scripts]
+skyr = "skyr:main"
 
 [dependency-groups]
 dev = [
@@ -61,10 +62,27 @@ cov = [
 [tool.autopep8]
 ignore = [ "W503" ]
 
+[tool.coverage.run]
+parallel = true
+plugins = [ "covdefaults" ]
+
+[tool.mypy]
+strict = true
+pretty = true
+enable_error_code = [ "ignore-without-code" ]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+addopts = "--tb=short --showlocals"
+
 [tool.ruff]
 line-length = 79
 
-lint.select = [
+[tool.ruff.lint]
+select = [
   "A",   # flake8-builtins
   "B",   # flake8-bugbear
   "BLE", # flake8-blind-except
@@ -91,19 +109,3 @@ lint.select = [
   "TRY", # tryceratops
   "W",   # pycodestyle
 ]
-
-[tool.pytest.ini_options]
-addopts = "--tb=short --showlocals"
-
-[tool.coverage.run]
-parallel = true
-plugins = [ "covdefaults" ]
-
-[tool.mypy]
-strict = true
-pretty = true
-enable_error_code = [ "ignore-without-code" ]
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-ignore_errors = true
