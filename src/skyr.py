@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """A low-fat task runner."""
+
 import argparse
 import errno
 import os
@@ -8,6 +9,7 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 from pathlib import Path
 from typing import NoReturn
+
 
 __version__ = "0.3.1"
 
@@ -23,7 +25,7 @@ def _err(msg: str) -> None:
 
 
 def find_dir(candidates: Iterable[str | Path]) -> Path | None:
-    """Searches an array for an existent directory.
+    """Search an array for an existent directory.
 
     :param candidates: Directories or names that will be searched
     :return: First existent directory, or ``None`` if not found.
@@ -37,7 +39,7 @@ def find_dir(candidates: Iterable[str | Path]) -> Path | None:
 
 
 def find_script(name: str, script_dir: Path) -> Path | None:
-    """Tries to find a script to run.
+    """Try to find a script to run.
 
     :param name: Name of the script
     :param script_dir: Directory to search for the scripts
@@ -70,7 +72,8 @@ def try_execute(
         if exc.errno is errno.EACCES:
             _err(
                 f"You are not allowed to execute {script_file!s}. Please "
-                "make sure that you've set the correct rights via chmod.", )
+                "make sure that you've set the correct rights via chmod."
+            )
         elif exc.errno is errno.ENOEXEC:
             _err(
                 f"{script_file!s} has a wrong executable format. Did you "
@@ -84,7 +87,7 @@ def try_execute(
 def _get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="A low-fat task runner, Skyr runs scripts from the "
-                    "'./script/' directory in a make(1) fashion.",
+        "'./script/' directory in a make(1) fashion.",
         epilog="Source code: <https://github.com/kytta/skyr>",
         allow_abbrev=False,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -108,7 +111,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=argparse.SUPPRESS,
         type=Path,
         help="Script directory. If not provided, Skyr will look for scripts in"
-             "'.skyr' and then 'script'",
+        "'.skyr' and then 'script'",
         metavar="DIR",
     )
     return parser
