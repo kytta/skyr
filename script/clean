@@ -10,5 +10,7 @@ rm -rf \
   .coverage \
   build \
   dist \
+  .coverage \
   coverage.xml \
+  htmlcov \
   skyr.egg-info

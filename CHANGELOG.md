@@ -2,10 +2,21 @@
 
 ## Unreleased
 
+### BREAKING CHANGE
+
+- [#69](https://codeberg.org/kytta/skyr/pulls/69):
+  Drop support for Python versions below 3.11
+
 ### Added
 
 - [#57](https://github.com/kytta/skyr/pull/57):
   Support for Python 3.13
+
+- [#29](https://codeberg.org/kytta/skyr/pulls/29):
+  You can now run `skyr --list` to display all available scripts
+
+- [#69](https://codeberg.org/kytta/skyr/pulls/69):
+  Support for Python 3.14
 
 ### Behind-the-scenes
 
@@ -14,6 +25,9 @@
 
 - [#57](https://github.com/kytta/skyr/pull/57):
   Use flit to build packages
+
+- [#70](https://codeberg.org/kytta/skyr/pulls/70):
+  Switch to uv for development
 
 ## 0.3.1 - 2023-10-03
 
@@ -24,7 +38,7 @@
 
 ## 0.3.0 - 2023-08-01
 
-## BREAKING
+### BREAKING CHANGE
 
 - [#43](https://github.com/kytta/skyr/pull/43):
   Drop support for Python 3.8
