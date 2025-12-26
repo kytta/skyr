@@ -217,13 +217,13 @@ tests = [
 cov = [
     { name = "covdefaults" },
     { name = "coverage", extras = ["toml"] },
-    { name = "pytest" },
+    { name = "pytest", specifier = ">=9" },
 ]
 dev = [
-    { name = "pytest" },
+    { name = "pytest", specifier = ">=9" },
     { name = "ruff" },
 ]
-tests = [{ name = "pytest" }]
+tests = [{ name = "pytest", specifier = ">=9" }]
 
 [[package]]
 name = "tomli"

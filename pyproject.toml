@@ -51,7 +51,7 @@ dev = [
   { include-group = "tests" },
 ]
 tests = [
-  "pytest",
+  "pytest>=9",
 ]
 cov = [
   "covdefaults",
@@ -75,8 +75,9 @@ enable_error_code = [ "ignore-without-code" ]
 module = "tests.*"
 ignore_errors = true
 
-[tool.pytest.ini_options]
-addopts = "--tb=short --showlocals"
+[tool.pytest]
+minversion = "9.0"
+addopts = ["--tb=short", "--showlocals"]
 
 [tool.ruff]
 line-length = 79
