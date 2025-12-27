@@ -1,3 +1,11 @@
+# Skyr is now on Codeberg
+
+I've had enough with GitHub. This repository is now on Codeberg: https://codeberg.org/kytta/skyr.git
+
+The repository on GitHub will stay archived (read-only) for a few months before I delete it for good.
+
+<details><summary>Previous README</summary>
+
 # Skyr
 
 > Low-fat task runner.
@@ -79,6 +87,8 @@ ______________________________________________________________________
 
 This project is hosted on GitHub:
 <https://github.com/kytta/skyr.git>
+
+</details>
 
 [isc license]: https://spdx.org/licenses/ISC.html
 [nikita karamov]: https://www.kytta.dev/
