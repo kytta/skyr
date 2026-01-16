@@ -8,13 +8,13 @@ requires = [
 name = "skyr"
 readme = "README.md"
 license = { text = "ISC" }
-maintainers = [
-  { name = "Nikita Karamov", email = "me@kytta.dev" },
-]
 authors = [
   { name = "Nikita Karamov", email = "me@kytta.dev" },
 ]
-requires-python = ">=3.9"
+maintainers = [
+  { name = "Nikita Karamov", email = "me@kytta.dev" },
+]
+requires-python = ">=3.11"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
@@ -26,63 +26,41 @@ classifiers = [
   "Operating System :: Unix",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Software Development :: Build Tools",
   "Topic :: Utilities",
   "Typing :: Typed",
 ]
-dynamic = [
-  "description",
-  "version",
+dependencies = []
+dynamic = ["description", "version"]
+
+[project.urls]
+Changelog = "https://codeberg.org/kytta/skyr/src/branch/main/CHANGELOG.md"
+Source = "https://codeberg.org/kytta/skyr"
+Issues = "https://codeberg.org/kytta/skyr/issues"
+
+[project.scripts]
+skyr = "skyr:main"
+
+[dependency-groups]
+dev = [
+  "ruff",
+  { include-group = "tests" },
 ]
-dependencies = [
+tests = [
+  "pytest>=9",
 ]
-urls.Issues = "https://github.com/kytta/skyr/issues"
-urls.Source = "https://github.com/kytta/skyr"
-scripts.skyr = "skyr:main"
+cov = [
+  "covdefaults",
+  "coverage[toml]",
+  { include-group = "tests" },
+]
 
 [tool.autopep8]
 ignore = [ "W503" ]
-
-[tool.ruff]
-target-version = "py39"
-
-line-length = 79
-
-lint.select = [
-  "A",   # flake8-builtins
-  "B",   # flake8-bugbear
-  "BLE", # flake8-blind-except
-  "C4",  # flake8-comprehensions
-  "C90", # mccabe
-  "DTZ", # flake8-datetimez
-  "E",
-  "EM",  # flake8-errmsg
-  "ERA", # eradicate
-  "F",   # pyflakes
-  "FBT", # flake8-boolean-trap
-  "ICN", # flake8-import-conventions
-  "ISC", # flake8-implicit-str-concat
-  "N",   # pep8-naming
-  "PIE", # flake8-pie
-  "PL",  # pylint
-  "PTH", # flake8-use-pathlib
-  "Q",   # flake8-quotes
-  "RET", # flake8-return
-  "RUF", # ruff
-  "S",   # bandit
-  "SIM", # flake8-simplify
-  "T20", # flake8-print
-  "TRY", # tryceratops
-  "W",   # pycodestyle
-]
-
-[tool.pytest.ini_options]
-addopts = "--tb=short --showlocals"
 
 [tool.coverage.run]
 parallel = true
@@ -91,9 +69,48 @@ plugins = [ "covdefaults" ]
 [tool.mypy]
 strict = true
 pretty = true
-python_version = "3.9"
 enable_error_code = [ "ignore-without-code" ]
 
 [[tool.mypy.overrides]]
 module = "tests.*"
 ignore_errors = true
+
+[tool.pytest]
+minversion = "9.0"
+addopts = ["--tb=short", "--showlocals"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "AIR",     # we're not Airflow
+  "ANN",     # Mypy is better at this
+  "COM",     # ruff format takes care of our commas
+  "D1",      # We don't care about missing docstrings
+  "D203",    # Class docstrings should not have blank lines
+  "D213",    # Multiline summary should be on first line
+  "DJ",      # we're not Django
+  "E501",    # leave line-length enforcement to ruff format
+  "FAST",    # we're not FastAPI
+  "FIX",     # Yes, we want markers.
+  "ISC001",  # conflicts with ruff format
+  "NPY",     # we're not NumPy
+  "PD",      # we're not pandas
+  "PLC0415", # sometimes, imports have to live elsewhere
+  "TD",      # we don't follow other people's todo style
+  "UP031",   # format() is slow as molasses; % and f'' FTW.
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/*_test.py" = [
+  "S",       # security concerns don't matter in tests
+  "PLR0913", # too many function arguments
+  "FBT",     # Boolean positional arg in function definition
+  "TRY",     # exception best practices don't matter in tests
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+lines-after-imports = 2

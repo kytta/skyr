@@ -19,7 +19,13 @@ into your existing project.
 
 ## Install
 
-### Using `pipx` (recommended)
+### Using `uv` (recommended)
+
+```sh
+uv tool install skyr
+```
+
+### Using `pipx`
 
 ```sh
 pipx install skyr
@@ -35,12 +41,6 @@ brew install kytta/python/skyr
 
 ```sh
 pip install --user skyr
-```
-
-## Drop-in executable
-
-```sh
-wget "https://raw.githubusercontent.com/kytta/skyr/main/skyr.py"
 ```
 
 ## Usage

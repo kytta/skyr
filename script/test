@@ -1,5 +1,3 @@
 #!/bin/sh
 
-set -eux
-
-pipx run pytest
+uv run --group tests pytest "$@"
